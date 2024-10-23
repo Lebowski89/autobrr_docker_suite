@@ -1,0 +1,39 @@
+---
+
+################################
+# BASICS
+################################
+
+autobrr_thelounge_basics_name: 'thelounge'
+autobrr_thelounge_basics_image_repo: 'lscr.io/linuxserver/thelounge'
+autobrr_thelounge_basics_image_tag: 'latest'
+autobrr_thelounge_basics_restart_policy: 'unless-stopped'
+
+################################
+# ENV
+################################
+
+autobrr_thelounge_env_timezone: 'Etc/UTC'
+autobrr_thelounge_env_puid: '1000'
+autobrr_thelounge_env_pgid: '1000'
+
+################################
+# PORTS
+################################
+
+autobrr_thelounge_ports_host: '9001'
+autobrr_thelounge_ports_cont: '9000'
+
+################################
+# PATHS
+################################
+
+autobrr_thelounge_paths_folder: '{{ autobrr_thelounge_basics_name }}'
+autobrr_thelounge_paths_location: '/opt/{{ autobrr_thelounge_paths_folder }}'
+
+################################
+# BINDS
+################################
+
+autobrr_thelounge_binds_config_mapping:
+  - '{{ autobrr_thelounge_paths_location }}/config:/config'

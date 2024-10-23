@@ -1,0 +1,84 @@
+---
+
+- name: Create postgres appdata directory
+  ansible.builtin.file:
+    path: '{{ lookup("vars", role_prefix + "_postgres_paths_location") }}'
+    state: directory
+    owner: '{{ lookup("vars", role_prefix + "_postgres_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_postgres_env_pgid") }}'
+    mode: '0755'
+
+- name: Create postgres keys directory
+  ansible.builtin.file:
+    path: '{{ lookup("vars", role_prefix + "_postgres_paths_keys_location") }}'
+    state: directory
+    owner: '{{ lookup("vars", role_prefix + "_postgres_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_postgres_env_pgid") }}'
+    mode: '0755'
+
+- name: Check if postgres_key.txt exists
+  ansible.builtin.stat:
+    path: '{{ lookup("vars", role_prefix + "_postgres_paths_keys_location") }}/{{ lookup("vars", role_prefix + "_postgres_auth_password_file") }}'
+  register: autobrr_postgres_key_txt
+
+- name: Insert postgres password into password file
+  when: not autobrr_postgres_key_txt.stat.exists
+  ansible.builtin.lineinfile:
+    path: '{{ lookup("vars", role_prefix + "_postgres_paths_keys_location") }}/{{ lookup("vars", role_prefix + "_postgres_auth_password_file") }}'
+    line: '{{ lookup("vars", role_prefix + "_postgres_auth_password") }}'
+    owner: '{{ lookup("vars", role_prefix + "_postgres_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_postgres_env_pgid") }}'
+    mode: '0644'
+    create: true
+
+- name: Register postgres network
+  community.docker.docker_network_info:
+    name: '{{ lookup("vars", role_prefix + "_postgres_network") }}'
+  register: autobrr_postgres_network_result
+
+- name: Postgres network builtin fail
+  ansible.builtin.fail:
+    msg: Postgres network does not exist nor is it enabled. Ensure the Postgres network variables contain valid entries.
+  when:
+    - not (lookup("vars", role_prefix + "_postgres_network_is_enabled"))
+    - not autobrr_postgres_network_result.exists
+
+- name: Create postgres network
+  when: not autobrr_postgres_network_result.exists
+  community.docker.docker_network:
+    name: '{{ lookup("vars", role_prefix + "_postgres_network") }}'
+    driver: '{{ lookup("vars", role_prefix + "_postgres_network_driver") }}'
+    ipam_config:
+      - subnet: '{{ lookup("vars", role_prefix + "_postgres_network_subnet") }}'
+
+- name: Register postgres container
+  community.docker.docker_container_info:
+    name: '{{ lookup("vars", role_prefix + "_postgres_basics_name") }}'
+  register: autobrr_postgres_container_result
+
+- name: Create postgres container
+  when: not autobrr_postgres_container_result.exists
+  community.docker.docker_container:
+    name: '{{ lookup("vars", role_prefix + "_postgres_basics_name") }}'
+    image: '{{ lookup("vars", role_prefix + "_postgres_basics_image_repo") }}:{{ lookup("vars", role_prefix + "_postgres_basics_image_tag") }}'
+    networks:
+      - name: '{{ lookup("vars", role_prefix + "_postgres_network") }}'
+    env:
+      PUID: '{{ lookup("vars", role_prefix + "_postgres_env_puid") }}'
+      PGID: '{{ lookup("vars", role_prefix + "_postgres_env_pgid") }}'
+      TZ: '{{ lookup("vars", role_prefix + "_postgres_env_timezone") }}'
+      POSTGRES_USER: '{{ lookup("vars", role_prefix + "_postgres_auth_user") }}'
+      POSTGRES_PASSWORD_FILE: '/keys/{{ lookup("vars", role_prefix + "_postgres_auth_password_file") }}'
+    ports:
+      - '{{ lookup("vars", role_prefix + "_postgres_ports_host") }}:{{ lookup("vars", role_prefix + "_postgres_ports_cont") }}'
+    volumes: '{{ lookup("vars", role_prefix + "_postgres_binds") }}'
+    restart_policy: '{{ lookup("vars", role_prefix + "_postgres_basics_restart_policy") }}'
+
+- name: Make sure the postgres container is started
+  community.docker.docker_container:
+    name: '{{ lookup("vars", role_prefix + "_postgres_basics_name") }}'
+    state: started
+  register: autobrr_start_postgres_docker
+  retries: 5
+  delay: 10
+  until: autobrr_start_postgres_docker is succeeded

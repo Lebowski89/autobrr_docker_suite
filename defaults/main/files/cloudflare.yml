@@ -1,0 +1,20 @@
+---
+
+################################
+# DNS
+################################
+
+  ## autobrr
+autobrr_cloudflare_record_type: 'A'  ## A (IPV4), AAAA (IPV6), CNAME, etc
+autobrr_cloudflare_proxy: 'true'  ## true for cloudflare DNS SSL
+autobrr_cloudflare_api_token: ''
+
+  ## thelounge
+autobrr_thelounge_cloudflare_record_type: 'A'  ## A (IPV4), AAAA (IPV6), CNAME, etc
+autobrr_thelounge_cloudflare_proxy: 'true'  ## true for cloudflare DNS SSL
+autobrr_thelounge_cloudflare_api_token: '{{ autobrr_cloudflare_api_token }}'
+
+  ## znc
+autobrr_znc_cloudflare_record_type: 'A'  ## A (IPV4), AAAA (IPV6), CNAME, etc
+autobrr_znc_cloudflare_proxy: 'true'  ## true for cloudflare DNS SSL
+autobrr_znc_cloudflare_api_token: '{{ autobrr_cloudflare_api_token }}'

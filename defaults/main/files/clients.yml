@@ -1,0 +1,46 @@
+---
+
+  ## Autobrr clients and indexers are configured within the Autobrr webui after install. 
+  ## Note: Autobrr/Omegabrr API are not generated/inserted by this role. Manually configure post install.
+
+################################
+# CLIENTS (OMEGABRR)
+################################
+
+  ## autobrr
+autobrr_omegabrr_autobrr_host: 'http://{{ autobrr_basics_name }}:{{ autobrr_ports_cont }}'
+
+  ## lidarr
+autobrr_omegabrr_lidarr_type: 'lidarr'
+autobrr_omegabrr_lidarr_name: 'lidarr'
+autobrr_omegabrr_lidarr_port: '8686'
+autobrr_omegabrr_lidarr_host: 'http://{{ autobrr_omegabrr_lidarr_name }}:{{ autobrr_omegabrr_lidarr_port }}'
+autobrr_omegabrr_lidarr_api: ''
+
+  ## radarr
+autobrr_omegabrr_radarr_type: 'radarr'
+autobrr_omegabrr_radarr_name: 'radarr'
+autobrr_omegabrr_radarr_port: '7878'
+autobrr_omegabrr_radarr_host: 'http://{{ autobrr_omegabrr_radarr_name }}:{{ autobrr_omegabrr_radarr_port }}'
+autobrr_omegabrr_radarr_api: ''
+
+  ## radarr4k
+autobrr_omegabrr_radarr4k_type: 'radarr'
+autobrr_omegabrr_radarr4k_name: 'radarr4k'
+autobrr_omegabrr_radarr4k_port: '7878'  ## container port will be same as radarr
+autobrr_omegabrr_radarr4k_host: 'http://{{ autobrr_omegabrr_radarr4k_name }}:{{ autobrr_omegabrr_radarr4k_port }}'
+autobrr_omegabrr_radarr4k_api: ''
+
+  ## sonarr
+autobrr_omegabrr_sonarr_type: 'sonarr'
+autobrr_omegabrr_sonarr_name: 'sonarr'
+autobrr_omegabrr_sonarr_port: '8989'
+autobrr_omegabrr_sonarr_host: 'http://{{ autobrr_omegabrr_sonarr_name }}:{{ autobrr_omegabrr_sonarr_port }}'
+autobrr_omegabrr_sonarr_api: ''
+
+  ## whisparr
+autobrr_omegabrr_whisparr_type: 'whisparr'
+autobrr_omegabrr_whisparr_name: 'whisparr'
+autobrr_omegabrr_whisparr_port: '6969'
+autobrr_omegabrr_whisparr_host: 'http://{{ autobrr_omegabrr_whisparr_name }}:{{ autobrr_omegabrr_whisparr_port }}'
+autobrr_omegabrr_whisparr_api: ''

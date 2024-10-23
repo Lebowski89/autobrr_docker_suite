@@ -1,0 +1,33 @@
+---
+
+################################
+# BASICS
+################################
+
+autobrr_postgres_is_enabled: '{{ (autobrr_postgres_basics_host is defined) and
+                                 (autobrr_postgres_basics_host is not none) and
+                                 (autobrr_postgres_basics_host | trim | length > 0) and
+                                 (autobrr_postgres_auth_user is defined) and
+                                 (autobrr_postgres_auth_user is not none) and
+                                 (autobrr_postgres_auth_user | trim | length > 0) and
+                                 (autobrr_postgres_auth_password is defined) and
+                                 (autobrr_postgres_auth_password is not none) and
+                                 (autobrr_postgres_auth_password | trim | length > 0) }}'
+
+################################
+# NETWORK
+################################
+
+autobrr_postgres_network_is_enabled: '{{ (autobrr_postgres_network_driver is defined) and
+                                         (autobrr_postgres_network_driver is not none) and
+                                         (autobrr_postgres_network_driver | trim | length > 0) and
+                                         (autobrr_postgres_network_subnet is defined) and
+                                         (autobrr_postgres_network_subnet is not none) and
+                                         (autobrr_postgres_network_subnet | trim | length > 0) }}'
+
+################################
+# BINDS
+################################
+
+autobrr_postgres_binds: '{{ autobrr_postgres_binds_config_mapping
+                            + autobrr_postgres_binds_keys_mapping }}'

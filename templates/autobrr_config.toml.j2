@@ -1,0 +1,10 @@
+# config.toml
+
+host = '0.0.0.0'
+port = '{{ autobrr_ports_cont }}'
+logPath = '{{ autobrr_logs_autobrr_log_path }}'
+logLevel = '{{ autobrr_logs_autobrr_log_level }}'
+logMaxSize = '{{ autobrr_logs_autobrr_log_max_size }}'
+logMaxBackups = '{{ autobrr_logs_autobrr_log_max_backups }}'
+checkForUpdates = true
+sessionSecret = '{{ autobrr_session_secret.stdout }}'

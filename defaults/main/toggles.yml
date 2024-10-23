@@ -1,0 +1,113 @@
+---
+
+  ## enable or disable role features here
+  ## features still need to meet the 'is_enabled' vars conditionals in order to run
+
+################################
+# DEPENDENCIES
+################################
+
+  ## Toggle whether to install required apt packages during role run
+  ## apt packages include: python3-requests and python3-lxml.
+
+autobrr_toggles_enable_apt_packages: true
+
+################################
+# DOCKER
+################################
+
+  ## Toggle whether to install docker during role run
+  ## Will add dockers gpg key / repository
+  ## apt dependency packages include: ca-certificates, curl
+  ## apt docker packages include: docker-ce, docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin.
+
+autobrr_toggles_enable_docker_install: true
+
+################################
+# POSTGRES
+################################
+
+  ## Toggle whether to use Postgres as a database
+  ## If enabled, the role will edit the xml config file with the required Postgres settings
+  ## The role will then ping for an existing Postgres docker container and create one if none exists
+  ## Finally, the role will use 'community.postgresql.postgresql' modules to ping for an existing database and create one if none exists
+
+autobrr_toggles_enable_postgres: false
+
+  ## warning: the below toggles will delete any existing sqlite database files
+
+autobrr_toggles_clean_files: false  # true will delete any existing sqlite database files
+
+################################
+# OMEGABRR
+################################
+
+  ## Toggle whether to deploy Omegabrr in a docker container. See: https://github.com/autobrr/omegabrr
+  ## Companion app to autobrr that allows for the easy creation of autobrr filters from arrs and custom lists
+
+autobrr_toggles_enable_omegabrr: true
+
+################################
+# THELOUNGE
+################################
+
+  ## Toggle whether to deploy TheLounge IRC client docker container
+  ## Having an IRC client alongside autobrr is useful for setting up and grouping your bot nicks
+  ## Also useful for chat purposes (obviously) - and will activate an IRC bonus on some trackers
+  ## Provides many of IRC bouncer benefits of a ZNC client - see: https://github.com/thelounge/thelounge
+
+autobrr_toggles_enable_thelounge: false
+
+################################
+# ZNC
+################################
+
+  ## Toggle whether to deploy the ZNC IRC-bouncer docker container. See: https://wiki.znc.in/ZNC
+  ## Useful for those wanting to connect to each IRC server in one place, to then pass through to autobrr/thelounge
+  ## Somewhat redundant for a autobrr set-up, but ZNC is stable, reliable, and has many advanced features available
+
+autobrr_toggles_enable_znc: false
+
+################################
+# TRAEFIK
+################################
+
+  ## Toggle whether to reverse-proxy behind Traefik (This role doesn't include setting up Traefik)
+  ## Includes joining to the Traefik docker network (or creating one if none exist)
+  ## Includes defining Traefik http/https/http-api/https-api router labels
+  ## In this role, the cert-resolver is cloudflare (named: dns-cloudflare) with tls options defined in Traefik's config file (tls-opts@file)
+  ## Various middleware includes: globalHeaders@file,redirect-to-https@docker,robotHeaders@file,secureHeaders@file
+  ## What middleware you use will be up to your needs and how you've set them up and named them within Traefik
+  ## Additional middleware for Authelia, Cloudflare, Theme-park will be defined based on toggles/conditionals (see the toggle section for each)
+
+autobrr_toggles_enable_traefik: false
+
+################################
+# AUTHELIA
+################################
+
+  ## Toggle whether to include Authelia middleware to Traefik labels
+  ## Requires setting up Authelia and defining the Authelia middleware in Traefik - this role won't do that for you
+  ## In this role, the Authelia middleware is 'authelia@docker', change in vars if yours differs
+  ## If enabled, the middleware will be combined with the others you've defined in the defaults variables
+
+autobrr_toggles_enable_authelia_middleware: false
+
+################################
+# CLOUDFLARE
+################################
+
+  ## Toggle whether to use the Ansible 'community.general.cloudflare_dns' module to add a DNS record
+  ## By default, this role will add a proxied 'A' record, with the use of a cloudflare token (Zone:Read, DNS:Edit)
+  ## It is also possible to use your global api + user email if you desire - this will require changes to the 'community.general.cloudflare_dns' tasks
+  ## This role will remove and add your desired DNS on each run, just in case you've changed your desired sub-domain name, DNS type, or proxy settings
+
+autobrr_toggles_enable_cloudflare_dns: false
+
+  ## Toggle whether to include the cloudflarewarp middleware to Traefik labels
+  ## Requires setting up and defining the cloudflarewarp plugin in Traefik - this role won't do that for you
+  ## In this role, the cloudflarewarp middleware is 'cloudflarewarp@docker', change in vars if yours differs
+  ## See the plugin documentation for what it is and what it can do - https://github.com/BetterCorp/cloudflarewarp
+  ## If enabled, the middleware will be combined with the others you've defined in the defaults variables
+
+autobrr_toggles_enable_cloudflarewarp: false

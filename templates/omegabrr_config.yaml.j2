@@ -1,0 +1,103 @@
+# config.yaml
+---
+server:
+  host: 0.0.0.0
+  port: {{ autobrr_omegabrr_ports_cont }}
+  apiToken: {{ omegabrr_api }}
+schedule: 0 */6 * * *
+clients:
+  autobrr:
+    host: {{ autobrr_omegabrr_autobrr_host }}
+    apikey: AUTOBRR_API
+
+  arr:
+{% if autobrr_omegabrr_clients_lidarr_is_enabled %}
+    - name: {{ autobrr_omegabrr_lidarr_name }}
+      type: {{ autobrr_omegabrr_lidarr_type }}
+      host: {{ autobrr_omegabrr_lidarr_host }}
+      apikey: {{ autobrr_omegabrr_lidarr_api }}
+      filters: []
+{% endif %}
+{% if autobrr_omegabrr_clients_radarr_is_enabled %}
+    - name: {{ autobrr_omegabrr_radarr_name }}
+      type: {{ autobrr_omegabrr_radarr_type }}
+      host: {{ autobrr_omegabrr_radarr_host }}
+      apikey: {{ autobrr_omegabrr_radarr_api }}
+      filters: []
+{% endif %}
+{% if autobrr_omegabrr_clients_radarr4k_is_enabled %}
+    - name: {{ autobrr_omegabrr_radarr4k_name }}
+      type: {{ autobrr_omegabrr_radarr4k_type }}
+      host: {{ autobrr_omegabrr_radarr4k_host }}
+      apikey: {{ autobrr_omegabrr_radarr4k_api }}
+      filters: []
+{% endif %}
+{% if autobrr_omegabrr_clients_sonarr_is_enabled %}
+    - name: {{ autobrr_omegabrr_sonarr_name }}
+      type: {{ autobrr_omegabrr_sonarr_type }}
+      host: {{ autobrr_omegabrr_sonarr_host }}
+      apikey: {{ autobrr_omegabrr_sonarr_api }}
+      filters: []
+      excludeAlternateTitles: false
+{% endif %}
+{% if autobrr_omegabrr_clients_whisparr_is_enabled %}
+    - name: {{ autobrr_omegabrr_whisparr_name }}
+      type: {{ autobrr_omegabrr_whisparr_type }}
+      host: {{ autobrr_omegabrr_whisparr_host }}
+      apikey: {{ autobrr_omegabrr_whisparr_api }}
+      filters: []
+{% endif %}
+lists:
+  #- name: Latest TV Shows
+  #  type: mdblist
+  #  url: https://mdblist.com/lists/garycrawfordgc/latest-tv-shows/json
+  #  filters:
+  #    - 1 # Change me
+
+  #- name: Anticipated TV
+  #  type: trakt
+  #  url: https://api.autobrr.com/lists/trakt/anticipated-tv
+  #  filters:
+  #    - 22 # Change me
+
+  #- name: Upcoming Movies
+  #  type: trakt
+  #  url: https://api.autobrr.com/lists/trakt/upcoming-movies
+  #  filters:
+  #    - 21 # Change me
+
+  #- name: Upcoming Bluray
+  #  type: trakt
+  #  url: https://api.autobrr.com/lists/trakt/upcoming-bluray
+  #  filters:
+  #    - 24 # Change me
+
+  #- name: Popular TV
+  #  type: trakt
+  #  url: https://api.autobrr.com/lists/trakt/popular-tv
+  #  filters:
+  #    - 25 # Change me
+
+  #- name: StevenLu
+  #  type: trakt
+  #  url: https://api.autobrr.com/lists/stevenlu
+  #  filters:
+  #    - 23 # Change me
+
+  #- name: New Albums
+  #  type: metacritic
+  #  url: https://api.autobrr.com/lists/metacritic/new-albums
+  #  filters:
+  #    - 9 # Change me
+
+  #- name: Upcoming Albums
+  #  type: metacritic
+  #  url: https://api.autobrr.com/lists/metacritic/upcoming-albums
+  #  filters:
+  #    - 20 # Change me
+
+  #- name: Steam Wishlist
+  #  type: steam
+  #  url: https://store.steampowered.com/wishlist/id/USERNAME/wishlistdata
+  #  filters:
+  #    - 20 # Change me

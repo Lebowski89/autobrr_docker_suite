@@ -1,0 +1,56 @@
+---
+
+################################
+# APPDATA
+################################
+
+- name: Create znc appdata directory
+  ansible.builtin.file:
+    path: '{{ lookup("vars", role_prefix + "_znc_paths_location") }}'
+    state: directory
+    owner: '{{ lookup("vars", role_prefix + "_znc_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_znc_env_pgid") }}'
+    mode: '0755'
+
+- name: Create znc config directory
+  ansible.builtin.file:
+    path: '{{ lookup("vars", role_prefix + "_znc_paths_location") }}/config'
+    state: directory
+    owner: '{{ lookup("vars", role_prefix + "_znc_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_znc_env_pgid") }}'
+    mode: '0755'
+
+################################
+# CONTAINER
+################################
+
+- name: Create ZNC container
+  when: not (lookup("vars", role_prefix + "_toggles_enable_traefik"))
+  community.docker.docker_container:
+    name: '{{ lookup("vars", role_prefix + "_znc_basics_name") }}'
+    image: '{{ lookup("vars", role_prefix + "_znc_basics_image_repo") }}:{{ lookup("vars", role_prefix + "_znc_basics_image_tag") }}'
+    networks: '{{ lookup("vars", role_prefix + "_znc_networks") }}'
+    env:
+      PUID: '{{ lookup("vars", role_prefix + "_znc_env_puid") }}'
+      PGID: '{{ lookup("vars", role_prefix + "_znc_env_pgid") }}'
+      TZ: '{{ lookup("vars", role_prefix + "_znc_env_timezone") }}'
+    ports:
+      - '{{ lookup("vars", role_prefix + "_znc_ports_host") }}:{{ lookup("vars", role_prefix + "_znc_ports_cont") }}'
+    volumes: '{{ lookup("vars", role_prefix + "_znc_binds_config_mapping") }}'
+    restart_policy: '{{ lookup("vars", role_prefix + "_znc_basics_restart_policy") }}'
+
+- name: Create ZNC traefik container
+  when: (lookup("vars", role_prefix + "_toggles_enable_traefik"))
+  community.docker.docker_container:
+    name: '{{ lookup("vars", role_prefix + "_znc_basics_name") }}'
+    image: '{{ lookup("vars", role_prefix + "_znc_basics_image_repo") }}:{{ lookup("vars", role_prefix + "_znc_basics_image_tag") }}'
+    networks: '{{ lookup("vars", role_prefix + "_znc_networks") }}'
+    env:
+      PUID: '{{ lookup("vars", role_prefix + "_znc_env_puid") }}'
+      PGID: '{{ lookup("vars", role_prefix + "_znc_env_pgid") }}'
+      TZ: '{{ lookup("vars", role_prefix + "_znc_env_timezone") }}'
+    labels: '{{ lookup("vars", role_prefix + "_znc_labels") }}'
+    ports:
+      - '{{ lookup("vars", role_prefix + "_znc_ports_host") }}:{{ lookup("vars", role_prefix + "_znc_ports_cont") }}'
+    volumes: '{{ lookup("vars", role_prefix + "_znc_binds_config_mapping") }}'
+    restart_policy: '{{ lookup("vars", role_prefix + "_znc_basics_restart_policy") }}'

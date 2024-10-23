@@ -1,0 +1,281 @@
+---
+
+################################
+# PREFIX
+################################
+
+- name: Set 'role_prefix' variable
+  ansible.builtin.set_fact:
+    role_prefix: 'autobrr'
+
+################################
+# DEPENDENCIES
+################################
+
+- name: Install prerequisite apt packages
+  when: (lookup("vars", role_prefix + "_toggles_enable_apt_packages"))
+  ansible.builtin.apt:
+    pkg:
+      - python3-requests
+      - python3-psycopg2
+      - python3-lxml
+    update_cache: true
+
+- name: Install collection requirements
+  community.general.ansible_galaxy_install:
+    type: collection
+    requirements_file: '{{ role_path }}/requirements.yml'
+
+################################
+# DOCKER
+################################
+
+- name: Apt install docker if required
+  when:
+    - (lookup("vars", role_prefix + "_toggles_enable_docker_install"))
+    - ansible_os_family == 'Debian'
+  block:
+    - name: Gather apt facts
+      ansible.builtin.package_facts:
+        manager: apt
+
+    - name: Include docker install tasks
+      when: '"docker-ce" not in ansible_facts.packages'
+      ansible.builtin.include_tasks: sub_tasks/docker.yml
+
+################################
+# CLEAN UP
+################################
+
+- name: Register container
+  community.docker.docker_container_info:
+    name: '{{ lookup("vars", role_prefix + "_basics_name") }}'
+  register: autobrr_existing_container_result
+
+- name: Remove existing container
+  when: autobrr_existing_container_result.exists
+  community.docker.docker_container:
+    container_default_behavior: compatibility
+    name: '{{ lookup("vars", role_prefix + "_basics_name") }}'
+    state: absent
+    stop_timeout: 10
+  register: autobrr_remove_docker_container
+  retries: 5
+  delay: 10
+  until: autobrr_remove_docker_container is succeeded
+
+################################
+# BACKEND NETWORK
+################################
+
+- name: Conduct backend network tasks
+  block:
+    - name: Register backend network
+      community.docker.docker_network_info:
+        name: '{{ lookup("vars", role_prefix + "_network_backend") }}'
+      register: autobrr_network_backend_result
+
+    - name: Network backend builtin fail
+      ansible.builtin.fail:
+        msg: Backend network does not exist nor is it enabled. Ensure the backend network variables contain valid entries.
+      when:
+        - not (lookup("vars", role_prefix + "_network_backend_is_enabled"))
+        - not autobrr_network_backend_result.exists
+
+    - name: Create backend network
+      when:
+        - (lookup("vars", role_prefix + "_network_backend_is_enabled"))
+        - not autobrr_network_backend_result.exists
+      community.docker.docker_network:
+        name: '{{ lookup("vars", role_prefix + "_network_backend") }}'
+        driver: '{{ lookup("vars", role_prefix + "_network_backend_driver") }}'
+        ipam_config:
+          - subnet: '{{ lookup("vars", role_prefix + "_network_backend_subnet") }}'
+
+################################
+# APPDATA
+################################
+
+- name: Create appdata directory
+  ansible.builtin.file:
+    path: '{{ lookup("vars", role_prefix + "_paths_location") }}'
+    state: directory
+    owner: '{{ lookup("vars", role_prefix + "_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_env_pgid") }}'
+    mode: '0755'
+
+- name: Create log directory
+  ansible.builtin.file:
+    path: '{{ lookup("vars", role_prefix + "_paths_logs_location") }}'
+    state: directory
+    owner: '{{ lookup("vars", role_prefix + "_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_env_pgid") }}'
+    mode: '0755'
+
+################################
+# CONFIG
+################################
+
+- name: Check if autobrr config toml exists
+  ansible.builtin.stat:
+    path: '{{ lookup("vars", role_prefix + "_paths_location") }}/config.toml'
+  register: autobrr_config_toml
+
+- name: Generate sessionSecret
+  when: not autobrr_config_toml.stat.exists
+  ansible.builtin.shell: 'head /dev/urandom | tr -dc A-Za-z0-9 | head -c16'
+  register: autobrr_session_secret
+
+- name: Import autobrr config file
+  when: not autobrr_config_toml.stat.exists
+  ansible.builtin.template:
+    src: '{{ role_path }}/templates/autobrr_config.toml.j2'
+    dest: '{{ lookup("vars", role_prefix + "_paths_location") }}/config.toml'
+    force: true
+    owner: '{{ lookup("vars", role_prefix + "_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_env_pgid") }}'
+    mode: '0664'
+
+- name: Wait for 'config.toml' to be created
+  ansible.builtin.wait_for:
+    path: '{{ lookup("vars", role_prefix + "_paths_location") }}/config.toml'
+    state: present
+
+################################
+# POSTGRES
+################################
+
+- name: Perform postgres tasks
+  when: (lookup("vars", role_prefix + "_toggles_enable_postgres"))
+  block:
+    - name: Postgres builtin fail
+      when: not (lookup("vars", role_prefix + "_postgres_is_enabled"))
+      ansible.builtin.fail:
+        msg: Postgres is toggled on, but one or more variables are empty.
+
+    - name: Include container tasks
+      ansible.builtin.include_tasks: postgres/container.yml
+
+    - name: Include database tasks
+      ansible.builtin.include_tasks: postgres/database.yml
+
+    - name: Include config.toml tasks
+      ansible.builtin.include_tasks: postgres/config_toml.yml
+
+################################
+# TRAEFIK
+################################
+
+- name: Conduct traefik tasks
+  when: (lookup("vars", role_prefix + "_toggles_enable_traefik"))
+  block:
+    - name: Traefik builtin fail
+      when: not (lookup("vars", role_prefix + "_traefik_is_enabled"))
+      ansible.builtin.fail:
+        msg: Traefik is toggled on, but the domain varible is empty.
+
+    - name: Register traefik network
+      community.docker.docker_network_info:
+        name: '{{ lookup("vars", role_prefix + "_traefik_network") }}'
+      register: autobrr_traefik_network_result
+
+    - name: Traefik builtin fail
+      when:
+        - not (lookup("vars", role_prefix + "_traefik_network_is_enabled"))
+        - not autobrr_traefik_network_result.exists
+      ansible.builtin.fail:
+        msg: Traefik network does not exist nor is it enabled. Ensure the Traefik network variables contain valid entries.
+
+    - name: Create traefik network
+      when: not autobrr_traefik_network_result.exists
+      community.docker.docker_network:
+        name: '{{ lookup("vars", role_prefix + "_traefik_network") }}'
+        driver: '{{ lookup("vars", role_prefix + "_traefik_network_driver") }}'
+        ipam_config:
+          - subnet: '{{ lookup("vars", role_prefix + "_traefik_network_subnet") }}'
+
+################################
+# CLOUDFLARE
+################################
+
+- name: Perform Cloudflare DNS tasks
+  when: (lookup("vars", role_prefix + "_toggles_enable_cloudflare_dns"))
+  block:
+    - name: Cloudflare builtin fail
+      when: not (lookup("vars", role_prefix + "_cloudflare_is_enabled"))
+      ansible.builtin.fail:
+        msg: Cloudflare DNS is toggled on, but the cloudflare API token variable is empty.
+
+    - name: Include cloudflare tasks
+      ansible.builtin.include_tasks: sub_tasks/cloudflare.yml
+
+################################
+# CONTAINER
+################################
+
+- name: Create container
+  when: not (lookup("vars", role_prefix + "_toggles_enable_traefik"))
+  community.docker.docker_container:
+    name: '{{ lookup("vars", role_prefix + "_basics_name") }}'
+    image: '{{ lookup("vars", role_prefix + "_basics_image_repo") }}:{{ lookup("vars", role_prefix + "_basics_image_tag") }}'
+    networks: '{{ lookup("vars", role_prefix + "_networks") }}'
+    env:
+      PUID: '{{ lookup("vars", role_prefix + "_env_puid") }}'
+      PGID: '{{ lookup("vars", role_prefix + "_env_pgid") }}'
+      TZ: '{{ lookup("vars", role_prefix + "_env_timezone") }}'
+    ports:
+      - '{{ lookup("vars", role_prefix + "_ports_host") }}:{{ lookup("vars", role_prefix + "_ports_cont") }}'
+    volumes: '{{ lookup("vars", role_prefix + "_volumes") }}'
+    restart_policy: '{{ lookup("vars", role_prefix + "_basics_restart_policy") }}'
+
+- name: Create traefik container
+  when: (lookup("vars", role_prefix + "_toggles_enable_traefik"))
+  community.docker.docker_container:
+    name: '{{ lookup("vars", role_prefix + "_basics_name") }}'
+    image: '{{ lookup("vars", role_prefix + "_basics_image_repo") }}:{{ lookup("vars", role_prefix + "_basics_image_tag") }}'
+    networks: '{{ lookup("vars", role_prefix + "_networks") }}'
+    env:
+      PUID: '{{ lookup("vars", role_prefix + "_env_puid") }}'
+      PGID: '{{ lookup("vars", role_prefix + "_env_pgid") }}'
+      TZ: '{{ lookup("vars", role_prefix + "_env_timezone") }}'
+    labels: '{{ lookup("vars", role_prefix + "_labels") }}'
+    ports:
+      - '{{ lookup("vars", role_prefix + "_ports_host") }}:{{ lookup("vars", role_prefix + "_ports_cont") }}'
+    volumes: '{{ lookup("vars", role_prefix + "_volumes") }}'
+    restart_policy: '{{ lookup("vars", role_prefix + "_basics_restart_policy") }}'
+
+################################
+# OMEGABRR
+################################
+
+- name: Include omegabrr tasks
+  when: autobrr_toggles_enable_omegabrr
+  ansible.builtin.include_tasks: sub_tasks/omegabrr.yml
+
+################################
+# THELOUNGE
+################################
+
+- name: Include thelounge container tasks
+  when: (lookup("vars", role_prefix + "_toggles_enable_thelounge"))
+  block:
+    - name: Deploy thelounge container
+      ansible.builtin.include_tasks: thelounge/container.yml
+
+    - name: Include thelounge cloudflare tasks
+      when: (lookup("vars", role_prefix + "_toggles_enable_cloudflare_dns"))
+      ansible.builtin.include_tasks: thelounge/cloudflare.yml
+
+################################
+# ZNC
+################################
+
+- name: Include znc container tasks
+  when: (lookup("vars", role_prefix + "_toggles_enable_znc"))
+  block:
+    - name: Deploy znc container
+      ansible.builtin.include_tasks: znc/container.yml
+
+    - name: Include znc cloudflare tasks
+      when: (lookup("vars", role_prefix + "_toggles_enable_cloudflare_dns"))
+      ansible.builtin.include_tasks: znc/cloudflare.yml

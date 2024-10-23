@@ -1,0 +1,40 @@
+---
+
+- name: Remove existing CNAME DNS record
+  community.general.cloudflare_dns:
+    api_token: '{{ lookup("vars", role_prefix + "_thelounge_cloudflare_api_token") }}'
+    zone: '{{ lookup("vars", role_prefix + "_thelounge_traefik_domain") }}'
+    state: absent
+    type: CNAME
+    record: '{{ lookup("vars", role_prefix + "_thelounge_traefik_subdomain") }}'
+
+- name: Remove existing A DNS record
+  community.general.cloudflare_dns:
+    api_token: '{{ lookup("vars", role_prefix + "_thelounge_cloudflare_api_token") }}'
+    zone: '{{ lookup("vars", role_prefix + "_thelounge_traefik_domain") }}'
+    state: absent
+    type: A
+    record: '{{ lookup("vars", role_prefix + "_thelounge_traefik_subdomain") }}'
+
+- name: Add DNS record
+  community.general.cloudflare_dns:
+    api_token: '{{ lookup("vars", role_prefix + "_thelounge_cloudflare_api_token") }}'
+    zone: '{{ lookup("vars", role_prefix + "_thelounge_traefik_domain") }}'
+    state: present
+    solo: true
+    proxied: '{{ lookup("vars", role_prefix + "_thelounge_cloudflare_proxy") }}'
+    type: '{{ lookup("vars", role_prefix + "_thelounge_cloudflare_record_type") }}'
+    value: '{{ ipify_public_ip }}'
+    record: '{{ lookup("vars", role_prefix + "_thelounge_traefik_subdomain") }}'
+  register: autobrr_thelounge_cloudflare_record_creation_status
+
+- name: Tasks on success
+  when: autobrr_thelounge_cloudflare_record_creation_status is succeeded
+  block:
+    - name: Set 'dns_record_print' variable
+      ansible.builtin.set_fact:
+        autobrr_thelounge_cloudflare_record_print: '{{ (lookup("vars", role_prefix + "_thelounge_traefik_subdomain") == lookup("vars", role_prefix + "_thelounge_traefik_domain")) | ternary(lookup("vars", role_prefix + "_thelounge_traefik_domain"), lookup("vars", role_prefix + "_thelounge_traefik_subdomain") + "." + lookup("vars", role_prefix + "_thelounge_traefik_domain")) }}'
+
+    - name: Display DNS record creation status
+      ansible.builtin.debug:
+        msg: 'DNS A Record for "{{ autobrr_thelounge_cloudflare_record_print }}" set to "{{ ipify_public_ip }}" was added. Proxy: {{ lookup("vars", role_prefix + "_thelounge_cloudflare_proxy") }}'

@@ -1,0 +1,39 @@
+---
+
+################################
+# BASICS
+################################
+
+autobrr_znc_basics_name: 'znc'
+autobrr_znc_basics_image_repo: 'lscr.io/linuxserver/znc'
+autobrr_znc_basics_image_tag: 'latest'
+autobrr_znc_basics_restart_policy: 'unless-stopped'
+
+################################
+# ENV
+################################
+
+autobrr_znc_env_timezone: 'Etc/UTC'
+autobrr_znc_env_puid: '1000'
+autobrr_znc_env_pgid: '1000'
+
+################################
+# PORTS
+################################
+
+autobrr_znc_ports_host: '6501'
+autobrr_znc_ports_cont: '6501'
+
+################################
+# PATHS
+################################
+
+autobrr_znc_paths_folder: '{{ autobrr_znc_basics_name }}'
+autobrr_znc_paths_location: '/opt/{{ autobrr_znc_paths_folder }}'
+
+################################
+# BINDS
+################################
+
+autobrr_znc_binds_config_mapping:
+  - '{{ autobrr_znc_paths_location }}:/config'

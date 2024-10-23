@@ -1,0 +1,89 @@
+---
+
+################################
+# BASICS
+################################
+
+  ## autobrr
+autobrr_basics_name: 'autobrr'
+autobrr_basics_image_repo: 'ghcr.io/autobrr/autobrr'
+autobrr_basics_image_tag: 'latest'
+autobrr_basics_restart_policy: 'unless-stopped'
+
+  ## omegabrr
+autobrr_omegabrr_basics_name: 'omegabrr'
+autobrr_omegabrr_basics_image_repo: 'ghcr.io/autobrr/omegabrr'
+autobrr_omegabrr_basics_image_tag: 'latest'
+autobrr_omegabrr_basics_restart_policy: 'unless-stopped'
+
+################################
+# NETWORK
+################################
+
+autobrr_network_backend: 'proxy' ## allows backend docker communication between autobrr and companion apps, such as omegabrr
+autobrr_network_backend_driver: 'bridge'  ## only required if network doesn't exist
+autobrr_network_backend_subnet: ''  ## only required if network doesn't exist
+
+################################
+# ENV
+################################
+
+  ## autobrr
+autobrr_env_timezone: 'Etc/UTC'
+autobrr_env_puid: '1000'
+autobrr_env_pgid: '1000'
+
+  ## omegabrr
+autobrr_omegabrr_env_timezone: '{{ autobrr_env_timezone }}'
+autobrr_omegabrr_env_puid: '{{ autobrr_env_puid }}'
+autobrr_omegabrr_env_pgid: '{{ autobrr_env_pgid }}'
+
+################################
+# PORTS
+################################
+
+  ## autobrr
+autobrr_ports_host: '7474'
+autobrr_ports_cont: '7474'
+
+  ## omegabrr
+autobrr_omegabrr_ports_host: '7441'
+autobrr_omegabrr_ports_cont: '7441'
+
+################################
+# PATHS
+################################
+
+  ## autobrr
+autobrr_paths_folder: '{{ autobrr_basics_name }}'
+autobrr_paths_location: '/opt/{{ autobrr_paths_folder }}'
+autobrr_paths_logs_folder: '{{ autobrr_basics_name }}'
+autobrr_paths_logs_location: '/opt/logs/{{ autobrr_paths_logs_folder }}'
+
+  ## omegabrr
+autobrr_omegabrr_paths_folder: '{{ autobrr_omegabrr_basics_name }}'
+autobrr_omegabrr_paths_location: '/opt/{{ autobrr_omegabrr_paths_folder }}'
+
+################################
+# BINDS
+################################
+
+  ## autobrr
+autobrr_binds_config_mapping:
+  - '{{ autobrr_paths_location }}:/config'
+
+autobrr_binds_logs_mapping:
+  - '{{ autobrr_paths_logs_location }}:/logs'
+
+  ## omegabrr
+autobrr_omegabrr_binds_config_mapping:
+  - '{{ autobrr_omegabrr_paths_location }}:/config'
+
+################################
+# LOGS
+################################
+
+autobrr_logs_autobrr_log_path: '/log/{{ autobrr_basics_name }}.log'  ## container log path
+autobrr_logs_autobrr_log_level: 'DEBUG'  ## Options: "ERROR", "DEBUG", "INFO", "WARN", "TRACE"
+autobrr_logs_autobrr_log_max_size: '50'  ## Max log size in megabytes
+autobrr_logs_autobrr_log_max_backups: '3'  ## Max amount of old log files

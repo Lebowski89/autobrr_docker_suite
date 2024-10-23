@@ -1,0 +1,58 @@
+---
+
+- name: Install prerequisite apt packages
+  ansible.builtin.apt:
+    pkg:
+      - ca-certificates
+      - curl
+    update_cache: true
+
+- name: Check if docker gpg key exists
+  ansible.builtin.stat:
+    path: /etc/apt/keyrings/docker.asc
+  register: docker_gpg_key_result
+
+- name: Remove existing docker gpg key
+  when: docker_gpg_key_result.stat.exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/docker.asc
+    state: absent
+
+- name: Create /etc/apt/keyrings directory
+  when: not docker_gpg_key_result.stat.exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/
+    state: directory
+    owner: '{{ lookup("vars", role_prefix + "_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_env_pgid") }}'
+    mode: '0755'
+
+- name: Curl docker gpg key
+  ansible.builtin.uri:
+    url: https://download.docker.com/linux/debian/gpg
+    method: GET
+    dest: /etc/apt/keyrings/docker.asc
+    follow_redirects: safe
+
+- name: Update docker.asc file permissions
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/docker.asc
+    state: file
+    owner: '{{ lookup("vars", role_prefix + "_env_puid") }}'
+    group: '{{ lookup("vars", role_prefix + "_env_pgid") }}'
+    mode: '0644'
+
+- name: Add repository to apt sources
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: Install docker apt packages
+  ansible.builtin.apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    update_cache: true
