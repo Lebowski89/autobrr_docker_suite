@@ -16,6 +16,18 @@ autobrr_omegabrr_basics_image_repo: 'ghcr.io/autobrr/omegabrr'
 autobrr_omegabrr_basics_image_tag: 'latest'
 autobrr_omegabrr_basics_restart_policy: 'unless-stopped'
 
+  ## thelounge
+autobrr_thelounge_basics_name: 'thelounge'
+autobrr_thelounge_basics_image_repo: 'lscr.io/linuxserver/thelounge'
+autobrr_thelounge_basics_image_tag: 'latest'
+autobrr_thelounge_basics_restart_policy: 'unless-stopped'
+
+  ## znc
+autobrr_znc_basics_name: 'znc'
+autobrr_znc_basics_image_repo: 'lscr.io/linuxserver/znc'
+autobrr_znc_basics_image_tag: 'latest'
+autobrr_znc_basics_restart_policy: 'unless-stopped'
+
 ################################
 # NETWORK
 ################################
@@ -38,6 +50,16 @@ autobrr_omegabrr_env_timezone: '{{ autobrr_env_timezone }}'
 autobrr_omegabrr_env_puid: '{{ autobrr_env_puid }}'
 autobrr_omegabrr_env_pgid: '{{ autobrr_env_pgid }}'
 
+  ## thelounge
+autobrr_thelounge_env_timezone: '{{ autobrr_env_timezone }}'
+autobrr_thelounge_env_puid: '{{ autobrr_env_puid }}'
+autobrr_thelounge_env_pgid: '{{ autobrr_env_pgid }}'
+
+  ## znc
+autobrr_znc_env_timezone: '{{ autobrr_env_timezone }}'
+autobrr_znc_env_puid: '{{ autobrr_env_puid }}'
+autobrr_znc_env_pgid: '{{ autobrr_env_pgid }}'
+
 ################################
 # PORTS
 ################################
@@ -49,6 +71,14 @@ autobrr_ports_cont: '7474'
   ## omegabrr
 autobrr_omegabrr_ports_host: '7441'
 autobrr_omegabrr_ports_cont: '7441'
+
+  ## thelounge
+autobrr_thelounge_ports_host: '9001'
+autobrr_thelounge_ports_cont: '9000'
+
+  ## znc
+autobrr_znc_ports_host: '6501'
+autobrr_znc_ports_cont: '6501'
 
 ################################
 # PATHS
@@ -64,6 +94,14 @@ autobrr_paths_logs_location: '/opt/logs/{{ autobrr_paths_logs_folder }}'
 autobrr_omegabrr_paths_folder: '{{ autobrr_omegabrr_basics_name }}'
 autobrr_omegabrr_paths_location: '/opt/{{ autobrr_omegabrr_paths_folder }}'
 
+  ## thelounge
+autobrr_thelounge_paths_folder: '{{ autobrr_thelounge_basics_name }}'
+autobrr_thelounge_paths_location: '/opt/{{ autobrr_thelounge_paths_folder }}'
+
+  ## znc
+autobrr_znc_paths_folder: '{{ autobrr_znc_basics_name }}'
+autobrr_znc_paths_location: '/opt/{{ autobrr_znc_paths_folder }}'
+
 ################################
 # BINDS
 ################################
@@ -71,13 +109,20 @@ autobrr_omegabrr_paths_location: '/opt/{{ autobrr_omegabrr_paths_folder }}'
   ## autobrr
 autobrr_binds_config_mapping:
   - '{{ autobrr_paths_location }}:/config'
-
 autobrr_binds_logs_mapping:
   - '{{ autobrr_paths_logs_location }}:/logs'
 
   ## omegabrr
 autobrr_omegabrr_binds_config_mapping:
   - '{{ autobrr_omegabrr_paths_location }}:/config'
+
+  ## thelounge
+autobrr_thelounge_binds_config_mapping:
+  - '{{ autobrr_thelounge_paths_location }}/config:/config'
+
+  ## znc
+autobrr_znc_binds_config_mapping:
+  - '{{ autobrr_znc_paths_location }}:/config'
 
 ################################
 # LOGS
