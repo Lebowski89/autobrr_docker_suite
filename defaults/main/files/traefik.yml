@@ -57,7 +57,7 @@ autobrr_thelounge_traefik_http_api_middlewares: '{{ autobrr_traefik_http_api_mid
 autobrr_thelounge_traefik_http_api_rule: '{{ autobrr_thelounge_traefik_http_rule + " && (PathPrefix(`/uploads`))" }}'
 autobrr_thelounge_traefik_http_api_priority: '{{ autobrr_traefik_http_api_priority }}'
 
-  ## znc - web
+  ## znc
 autobrr_znc_traefik_http_web_middlewares: '{{ autobrr_traefik_http_middlewares }}'
 autobrr_znc_traefik_http_web_rule: 'Host(`{{ autobrr_znc_traefik_subdomain }}.{{ autobrr_znc_traefik_domain }}`)'
 autobrr_znc_traefik_http_web_priority: '{{ autobrr_traefik_http_priority }}'
@@ -65,15 +65,6 @@ autobrr_znc_traefik_http_web_priority: '{{ autobrr_traefik_http_priority }}'
 autobrr_znc_traefik_http_web_api_middlewares: '{{ autobrr_traefik_http_api_middlewares }}'
 autobrr_znc_traefik_http_web_api_rule: '{{ autobrr_znc_traefik_http_web_rule + " && (PathPrefix(`/uploads`))" }}'
 autobrr_znc_traefik_http_web_api_priority: '{{ autobrr_traefik_http_api_priority }}'
-
-  ## znc - irc
-autobrr_znc_traefik_http_irc_middlewares: '{{ autobrr_traefik_http_middlewares }}'
-autobrr_znc_traefik_http_irc_rule: 'Host(`{{ autobrr_znc_traefik_subdomain }}.{{ autobrr_znc_traefik_domain }}`)'
-autobrr_znc_traefik_http_irc_priority: '{{ autobrr_traefik_http_priority }}'
-
-autobrr_znc_traefik_http_irc_api_middlewares: '{{ autobrr_traefik_http_api_middlewares }}'
-autobrr_znc_traefik_http_irc_api_rule: '{{ autobrr_znc_traefik_http_irc_rule + " && (PathPrefix(`/uploads`))" }}'
-autobrr_znc_traefik_http_irc_api_priority: '{{ autobrr_traefik_http_api_priority }}'
 
 ################################
 # ROUTER (HTTPS)
@@ -97,7 +88,7 @@ autobrr_thelounge_traefik_https_api_middlewares: '{{ autobrr_traefik_https_api_m
 autobrr_thelounge_traefik_https_api_rule: '{{ autobrr_thelounge_traefik_https_rule + " && (PathPrefix(`/uploads`))" }}'
 autobrr_thelounge_traefik_https_api_priority: '{{ autobrr_traefik_https_api_priority }}'
 
-  ## znc - web
+  ## znc
 autobrr_znc_traefik_https_web_middlewares: '{{ autobrr_traefik_https_middlewares }}'
 autobrr_znc_traefik_https_web_rule: 'Host(`{{ autobrr_znc_traefik_subdomain }}.{{ autobrr_znc_traefik_domain }}`)'
 autobrr_znc_traefik_https_web_priority: '{{ autobrr_traefik_https_priority }}'
@@ -106,14 +97,13 @@ autobrr_znc_traefik_https_web_api_middlewares: '{{ autobrr_traefik_https_api_mid
 autobrr_znc_traefik_https_web_api_rule: '{{ autobrr_znc_traefik_https_web_rule + " && (PathPrefix(`/uploads`))" }}'
 autobrr_znc_traefik_https_web_api_priority: '{{ autobrr_traefik_https_api_priority }}'
 
-  ## znc - irc
-autobrr_znc_traefik_https_irc_middlewares: '{{ autobrr_traefik_https_middlewares }}'
-autobrr_znc_traefik_https_irc_rule: 'Host(`{{ autobrr_znc_traefik_subdomain }}.{{ autobrr_znc_traefik_domain }}`)'
-autobrr_znc_traefik_https_irc_priority: '{{ autobrr_traefik_https_priority }}'
+################################
+# ROUTER (TCP)
+################################
 
-autobrr_znc_traefik_https_irc_api_middlewares: '{{ autobrr_traefik_https_api_middlewares }}'
-autobrr_znc_traefik_https_irc_api_rule: '{{ autobrr_znc_traefik_https_irc_rule + " && (PathPrefix(`/uploads`))" }}'
-autobrr_znc_traefik_https_irc_api_priority: '{{ autobrr_traefik_https_api_priority }}'
+  ## znc-irc
+autobrr_znc_traefik_tcp_irc_rule: 'HostSNI(`{{ autobrr_znc_traefik_subdomain }}.{{ autobrr_znc_traefik_domain }}`)'
+autobrr_znc_traefik_tcp_irc_priority: '{{ autobrr_traefik_http_priority }}'
 
 ################################
 # THEME-PARK
