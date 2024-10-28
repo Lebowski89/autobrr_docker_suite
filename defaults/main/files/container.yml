@@ -77,8 +77,10 @@ autobrr_thelounge_ports_host: '9001'
 autobrr_thelounge_ports_cont: '9000'
 
   ## znc
-autobrr_znc_ports_host: '6501'
-autobrr_znc_ports_cont: '6501'
+autobrr_znc_ports_web_host: '6501'
+autobrr_znc_ports_web_cont: '6501'
+autobrr_znc_ports_irc_host: '6502'
+autobrr_znc_ports_irc_cont: '6502'
 
 ################################
 # PATHS

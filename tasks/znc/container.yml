@@ -35,7 +35,8 @@
       PGID: '{{ lookup("vars", role_prefix + "_znc_env_pgid") }}'
       TZ: '{{ lookup("vars", role_prefix + "_znc_env_timezone") }}'
     ports:
-      - '{{ lookup("vars", role_prefix + "_znc_ports_host") }}:{{ lookup("vars", role_prefix + "_znc_ports_cont") }}'
+      - '{{ lookup("vars", role_prefix + "_znc_ports_web_host") }}:{{ lookup("vars", role_prefix + "_znc_ports_web_cont") }}'
+      - '{{ lookup("vars", role_prefix + "_znc_ports_irc_host") }}:{{ lookup("vars", role_prefix + "_znc_ports_irc_cont") }}'
     volumes: '{{ lookup("vars", role_prefix + "_znc_binds_config_mapping") }}'
     restart_policy: '{{ lookup("vars", role_prefix + "_znc_basics_restart_policy") }}'
 
@@ -51,6 +52,7 @@
       TZ: '{{ lookup("vars", role_prefix + "_znc_env_timezone") }}'
     labels: '{{ lookup("vars", role_prefix + "_znc_labels") }}'
     ports:
-      - '{{ lookup("vars", role_prefix + "_znc_ports_host") }}:{{ lookup("vars", role_prefix + "_znc_ports_cont") }}'
+      - '{{ lookup("vars", role_prefix + "_znc_ports_web_host") }}:{{ lookup("vars", role_prefix + "_znc_ports_web_cont") }}'
+      - '{{ lookup("vars", role_prefix + "_znc_ports_irc_host") }}:{{ lookup("vars", role_prefix + "_znc_ports_irc_cont") }}'     
     volumes: '{{ lookup("vars", role_prefix + "_znc_binds_config_mapping") }}'
     restart_policy: '{{ lookup("vars", role_prefix + "_znc_basics_restart_policy") }}'

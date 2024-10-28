@@ -19,73 +19,143 @@ autobrr_znc_networks: '{{ autobrr_znc_network_default_bind
 ################################
 
 autobrr_znc_labels: '{{ autobrr_znc_traefik_labels_default
-                        | combine(autobrr_znc_traefik_labels_router)
-                        | combine(autobrr_znc_traefik_labels_router_secure) }}'
+                        | combine(autobrr_znc_traefik_labels_web_router)
+                        | combine(autobrr_znc_traefik_labels_web_router_secure) 
+                        | combine(autobrr_znc_traefik_labels_irc_router)
+                        | combine(autobrr_znc_traefik_labels_irc_router_secure) }}'
 
 ################################
-# TRAEFIK
+# TRAEFIK (DEFAULT)
 ################################
 
 autobrr_znc_traefik_labels_default:
   traefik.enable: 'true'
   traefik.docker.network: '{{ autobrr_traefik_network }}'
 
-autobrr_znc_traefik_labels_router:
-  ## http
-  traefik.http.routers.znc-rtr.entrypoints: 'http'
-  traefik.http.routers.znc-rtr.rule: '{{ autobrr_znc_traefik_http_rule }}'
-  traefik.http.routers.znc-rtr.middlewares: '{{ autobrr_znc_traefik_http_middlewares_bind }}'
-  traefik.http.routers.znc-rtr.priority: '{{ autobrr_znc_traefik_http_priority }}'
-  traefik.http.routers.znc-rtr.service: 'znc-rtr-svc'
-  traefik.http.services.znc-rtr-svc.loadbalancer.server.port: '{{ autobrr_znc_traefik_port }}'
-  ## http-api
-  traefik.http.routers.znc-api-rtr.entrypoints: 'http'
-  traefik.http.routers.znc-api-rtr.rule: '{{ autobrr_znc_traefik_http_api_rule }}'
-  traefik.http.routers.znc-api-rtr.middlewares: '{{ autobrr_znc_traefik_http_api_middlewares_bind }}'
-  traefik.http.routers.znc-api-rtr.priority: '{{ autobrr_znc_traefik_http_api_priority }}'
-  traefik.http.routers.znc-api-rtr.service: 'znc-rtr-svc'
+################################
+# TRAEFIK (WEB)
+################################
 
-autobrr_znc_traefik_labels_router_secure:
-  ## https
-  traefik.http.routers.znc-rtr-secure.entrypoints: 'https'
-  traefik.http.routers.znc-rtr-secure.rule: '{{ autobrr_znc_traefik_https_rule }}'
-  traefik.http.routers.znc-rtr-secure.middlewares: '{{ autobrr_znc_traefik_https_middlewares_bind }}'
-  traefik.http.routers.znc-rtr-secure.priority: '{{ autobrr_znc_traefik_https_priority }}'
-  traefik.http.routers.znc-rtr-secure.service: 'znc-rtr-secure-svc'
-  traefik.http.routers.znc-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
-  traefik.http.routers.znc-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
-  traefik.http.services.znc-rtr-secure-svc.loadbalancer.server.port: '{{ autobrr_znc_traefik_port }}'
-  ## https-api
-  traefik.http.routers.znc-api-rtr-secure.entrypoints: 'https'
-  traefik.http.routers.znc-api-rtr-secure.rule: '{{ autobrr_znc_traefik_https_api_rule }}'
-  traefik.http.routers.znc-api-rtr-secure.middlewares: '{{ autobrr_znc_traefik_https_api_middlewares_bind }}'
-  traefik.http.routers.znc-api-rtr-secure.priority: '{{ autobrr_znc_traefik_https_api_priority }}'
-  traefik.http.routers.znc-api-rtr-secure.service: 'znc-rtr-secure-svc'
-  traefik.http.routers.znc-api-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
-  traefik.http.routers.znc-api-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
+autobrr_znc_traefik_labels_web_router:
+  ## http-web
+  traefik.http.routers.znc-web-rtr.entrypoints: 'http'
+  traefik.http.routers.znc-web-rtr.rule: '{{ autobrr_znc_traefik_http_web_rule }}'
+  traefik.http.routers.znc-web-rtr.middlewares: '{{ autobrr_znc_traefik_http_web_middlewares_bind }}'
+  traefik.http.routers.znc-web-rtr.priority: '{{ autobrr_znc_traefik_http_web_priority }}'
+  traefik.http.routers.znc-web-rtr.service: 'znc-web-rtr-svc'
+  traefik.http.services.znc-web-rtr-svc.loadbalancer.server.port: '{{ autobrr_znc_traefik_web_port }}'
+  ## http-web-api
+  traefik.http.routers.znc-web-api-rtr.entrypoints: 'http'
+  traefik.http.routers.znc-web-api-rtr.rule: '{{ autobrr_znc_traefik_http_web_api_rule }}'
+  traefik.http.routers.znc-web-api-rtr.middlewares: '{{ autobrr_znc_traefik_http_web_api_middlewares_bind }}'
+  traefik.http.routers.znc-web-api-rtr.priority: '{{ autobrr_znc_traefik_http_web_api_priority }}'
+  traefik.http.routers.znc-web-api-rtr.service: 'znc-web-rtr-svc'
 
-autobrr_znc_traefik_http_middlewares_bind: '{{ autobrr_znc_traefik_http_middlewares
-                                               + (",cloudflarewarp@docker"
-                                                  if (autobrr_toggles_enable_cloudflarewarp)
-                                                  else "")
-                                               + (",authelia@docker"
-                                                  if (autobrr_toggles_enable_authelia_middleware)
-                                                  else "") }}'
+autobrr_znc_traefik_labels_web_router_secure:
+  ## https-web
+  traefik.http.routers.znc-web-rtr-secure.entrypoints: 'https'
+  traefik.http.routers.znc-web-rtr-secure.rule: '{{ autobrr_znc_traefik_https_web_rule }}'
+  traefik.http.routers.znc-web-rtr-secure.middlewares: '{{ autobrr_znc_traefik_https_web_middlewares_bind }}'
+  traefik.http.routers.znc-web-rtr-secure.priority: '{{ autobrr_znc_traefik_https_web_priority }}'
+  traefik.http.routers.znc-web-rtr-secure.service: 'znc-web-rtr-secure-svc'
+  traefik.http.routers.znc-web-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
+  traefik.http.routers.znc-web-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
+  traefik.http.services.znc-web-rtr-secure-svc.loadbalancer.server.port: '{{ autobrr_znc_traefik_web_port }}'
+  ## https-web-api
+  traefik.http.routers.znc-web-api-rtr-secure.entrypoints: 'https'
+  traefik.http.routers.znc-web-api-rtr-secure.rule: '{{ autobrr_znc_traefik_https_web_api_rule }}'
+  traefik.http.routers.znc-web-api-rtr-secure.middlewares: '{{ autobrr_znc_traefik_https_web_api_middlewares_bind }}'
+  traefik.http.routers.znc-web-api-rtr-secure.priority: '{{ autobrr_znc_traefik_https_web_api_priority }}'
+  traefik.http.routers.znc-web-api-rtr-secure.service: 'znc-web-rtr-secure-svc'
+  traefik.http.routers.znc-web-api-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
+  traefik.http.routers.znc-web-api-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
 
-autobrr_znc_traefik_http_api_middlewares_bind: '{{ autobrr_znc_traefik_http_api_middlewares
+autobrr_znc_traefik_http_web_middlewares_bind: '{{ autobrr_znc_traefik_http_web_middlewares
                                                    + (",cloudflarewarp@docker"
                                                       if (autobrr_toggles_enable_cloudflarewarp)
+                                                      else "")
+                                                   + (",authelia@docker"
+                                                      if (autobrr_toggles_enable_authelia_middleware)
                                                       else "") }}'
 
-autobrr_znc_traefik_https_middlewares_bind: '{{ autobrr_znc_traefik_https_middlewares
-                                                + (",cloudflarewarp@docker"
-                                                   if (autobrr_toggles_enable_cloudflarewarp)
-                                                   else "")
-                                                + (",authelia@docker"
-                                                   if (autobrr_toggles_enable_authelia_middleware)
-                                                   else "") }}'
+autobrr_znc_traefik_http_web_api_middlewares_bind: '{{ autobrr_znc_traefik_http_web_api_middlewares
+                                                       + (",cloudflarewarp@docker"
+                                                          if (autobrr_toggles_enable_cloudflarewarp)
+                                                          else "") }}'
 
-autobrr_znc_traefik_https_api_middlewares_bind: '{{ autobrr_znc_traefik_https_api_middlewares
+autobrr_znc_traefik_https_web_middlewares_bind: '{{ autobrr_znc_traefik_https_web_middlewares
                                                     + (",cloudflarewarp@docker"
                                                        if (autobrr_toggles_enable_cloudflarewarp)
+                                                       else "")
+                                                    + (",authelia@docker"
+                                                       if (autobrr_toggles_enable_authelia_middleware)
                                                        else "") }}'
+
+autobrr_znc_traefik_https_web_api_middlewares_bind: '{{ autobrr_znc_traefik_https_web_api_middlewares
+                                                        + (",cloudflarewarp@docker"
+                                                           if (autobrr_toggles_enable_cloudflarewarp)
+                                                           else "") }}'
+
+################################
+# TRAEFIK (IRC)
+################################
+
+autobrr_znc_traefik_labels_irc_router:
+  ## http-irc
+  traefik.http.routers.znc-irc-rtr.entrypoints: 'http'
+  traefik.http.routers.znc-irc-rtr.rule: '{{ autobrr_znc_traefik_http_irc_rule }}'
+  traefik.http.routers.znc-irc-rtr.middlewares: '{{ autobrr_znc_traefik_http_irc_middlewares_bind }}'
+  traefik.http.routers.znc-irc-rtr.priority: '{{ autobrr_znc_traefik_http_irc_priority }}'
+  traefik.http.routers.znc-irc-rtr.service: 'znc-irc-rtr-svc'
+  traefik.http.services.znc-irc-rtr-svc.loadbalancer.server.port: '{{ autobrr_znc_traefik_irc_port }}'
+  ## http-irc-api
+  traefik.http.routers.znc-irc-api-rtr.entrypoints: 'http'
+  traefik.http.routers.znc-irc-api-rtr.rule: '{{ autobrr_znc_traefik_http_irc_api_rule }}'
+  traefik.http.routers.znc-irc-api-rtr.middlewares: '{{ autobrr_znc_traefik_http_irc_api_middlewares_bind }}'
+  traefik.http.routers.znc-irc-api-rtr.priority: '{{ autobrr_znc_traefik_http_irc_api_priority }}'
+  traefik.http.routers.znc-irc-api-rtr.service: 'znc-irc-rtr-svc'
+
+autobrr_znc_traefik_labels_irc_router_secure:
+  ## https-irc
+  traefik.http.routers.znc-irc-rtr-secure.entrypoints: 'https'
+  traefik.http.routers.znc-irc-rtr-secure.rule: '{{ autobrr_znc_traefik_https_irc_rule }}'
+  traefik.http.routers.znc-irc-rtr-secure.middlewares: '{{ autobrr_znc_traefik_https_irc_middlewares_bind }}'
+  traefik.http.routers.znc-irc-rtr-secure.priority: '{{ autobrr_znc_traefik_https_irc_priority }}'
+  traefik.http.routers.znc-irc-rtr-secure.service: 'znc-irc-rtr-secure-svc'
+  traefik.http.routers.znc-irc-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
+  traefik.http.routers.znc-irc-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
+  traefik.http.services.znc-irc-rtr-secure-svc.loadbalancer.server.port: '{{ autobrr_znc_traefik_irc_port }}'
+  ## https-irc-api
+  traefik.http.routers.znc-irc-api-rtr-secure.entrypoints: 'https'
+  traefik.http.routers.znc-irc-api-rtr-secure.rule: '{{ autobrr_znc_traefik_https_irc_api_rule }}'
+  traefik.http.routers.znc-irc-api-rtr-secure.middlewares: '{{ autobrr_znc_traefik_https_irc_api_middlewares_bind }}'
+  traefik.http.routers.znc-irc-api-rtr-secure.priority: '{{ autobrr_znc_traefik_https_irc_api_priority }}'
+  traefik.http.routers.znc-irc-api-rtr-secure.service: 'znc-irc-rtr-secure-svc'
+  traefik.http.routers.znc-irc-api-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
+  traefik.http.routers.znc-irc-api-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
+
+autobrr_znc_traefik_http_irc_middlewares_bind: '{{ autobrr_znc_traefik_http_irc_middlewares
+                                                   + (",cloudflarewarp@docker"
+                                                      if (autobrr_toggles_enable_cloudflarewarp)
+                                                      else "")
+                                                   + (",authelia@docker"
+                                                      if (autobrr_toggles_enable_authelia_middleware)
+                                                      else "") }}'
+
+autobrr_znc_traefik_http_irc_api_middlewares_bind: '{{ autobrr_znc_traefik_http_irc_api_middlewares
+                                                       + (",cloudflarewarp@docker"
+                                                          if (autobrr_toggles_enable_cloudflarewarp)
+                                                          else "") }}'
+
+autobrr_znc_traefik_https_irc_middlewares_bind: '{{ autobrr_znc_traefik_https_irc_middlewares
+                                                    + (",cloudflarewarp@docker"
+                                                       if (autobrr_toggles_enable_cloudflarewarp)
+                                                       else "")
+                                                    + (",authelia@docker"
+                                                       if (autobrr_toggles_enable_authelia_middleware)
+                                                       else "") }}'
+
+autobrr_znc_traefik_https_irc_api_middlewares_bind: '{{ autobrr_znc_traefik_https_irc_api_middlewares
+                                                        + (",cloudflarewarp@docker"
+                                                           if (autobrr_toggles_enable_cloudflarewarp)
+                                                           else "") }}'
