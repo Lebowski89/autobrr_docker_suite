@@ -2,19 +2,19 @@
 
 - name: Ping for existing main database
   community.postgresql.postgresql_ping:
-    login_host: '{{ lookup("vars", role_prefix + "_postgres_basics_host") }}'
-    login_user: '{{ lookup("vars", role_prefix + "_postgres_auth_user") }}'
-    login_password: '{{ lookup("vars", role_prefix + "_postgres_auth_password") }}'
-    port: '{{ lookup("vars", role_prefix + "_postgres_ports_host") }}'
-    db: '{{ lookup("vars", role_prefix + "_postgres_database") }}'
+    login_host: '{{ lookup("vars", autobrr_prefix + "_postgres_basics_host") }}'
+    login_user: '{{ lookup("vars", autobrr_prefix + "_postgres_auth_user") }}'
+    login_password: '{{ lookup("vars", autobrr_prefix + "_postgres_auth_password") }}'
+    port: '{{ lookup("vars", autobrr_prefix + "_postgres_ports_host") }}'
+    db: '{{ lookup("vars", autobrr_prefix + "_postgres_database") }}'
   register: autobrr_postgres_db
 
 - name: Create postgres main database
   when: not autobrr_postgres_db == true
   community.postgresql.postgresql_db:
-    login_host: '{{ lookup("vars", role_prefix + "_postgres_basics_host") }}'
-    login_user: '{{ lookup("vars", role_prefix + "_postgres_auth_user") }}'
-    login_password: '{{ lookup("vars", role_prefix + "_postgres_auth_password") }}'
-    port: '{{ lookup("vars", role_prefix + "_postgres_ports_host") }}'
-    name: '{{ lookup("vars", role_prefix + "_postgres_database") }}'
+    login_host: '{{ lookup("vars", autobrr_prefix + "_postgres_basics_host") }}'
+    login_user: '{{ lookup("vars", autobrr_prefix + "_postgres_auth_user") }}'
+    login_password: '{{ lookup("vars", autobrr_prefix + "_postgres_auth_password") }}'
+    port: '{{ lookup("vars", autobrr_prefix + "_postgres_ports_host") }}'
+    name: '{{ lookup("vars", autobrr_prefix + "_postgres_database") }}'
     state: present

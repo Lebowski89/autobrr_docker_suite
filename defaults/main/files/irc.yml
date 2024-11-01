@@ -1,0 +1,69 @@
+---
+
+################################
+# BASICS
+################################
+
+  ## thelounge
+autobrr_thelounge_basics_name: 'thelounge'
+autobrr_thelounge_basics_image_repo: 'lscr.io/linuxserver/thelounge'
+autobrr_thelounge_basics_image_tag: 'latest'
+autobrr_thelounge_basics_restart_policy: 'unless-stopped'
+
+  ## znc
+autobrr_znc_basics_name: 'znc'
+autobrr_znc_basics_image_repo: 'lscr.io/linuxserver/znc'
+autobrr_znc_basics_image_tag: 'latest'
+autobrr_znc_basics_restart_policy: 'unless-stopped'
+
+################################
+# ENV
+################################
+
+  ## thelounge
+autobrr_thelounge_env_timezone: '{{ autobrr_env_timezone }}'
+autobrr_thelounge_env_puid: '{{ autobrr_env_puid }}'
+autobrr_thelounge_env_pgid: '{{ autobrr_env_pgid }}'
+
+  ## znc
+autobrr_znc_env_timezone: '{{ autobrr_env_timezone }}'
+autobrr_znc_env_puid: '{{ autobrr_env_puid }}'
+autobrr_znc_env_pgid: '{{ autobrr_env_pgid }}'
+
+################################
+# PORTS
+################################
+
+  ## thelounge
+autobrr_thelounge_ports_host: '9001'
+autobrr_thelounge_ports_cont: '9000'
+
+  ## znc
+autobrr_znc_ports_web_host: '6501'
+autobrr_znc_ports_web_cont: '6501'
+autobrr_znc_ports_irc_host: '6502'
+autobrr_znc_ports_irc_cont: '6502'
+
+################################
+# PATHS
+################################
+
+  ## thelounge
+autobrr_thelounge_paths_folder: '{{ autobrr_thelounge_basics_name }}'
+autobrr_thelounge_paths_location: '/opt/{{ autobrr_thelounge_paths_folder }}'
+
+  ## znc
+autobrr_znc_paths_folder: '{{ autobrr_znc_basics_name }}'
+autobrr_znc_paths_location: '/opt/{{ autobrr_znc_paths_folder }}'
+
+################################
+# BINDS
+################################
+
+  ## thelounge
+autobrr_thelounge_binds_config_mapping:
+  - '{{ autobrr_thelounge_paths_location }}/config:/config'
+
+  ## znc
+autobrr_znc_binds_config_mapping:
+  - '{{ autobrr_znc_paths_location }}:/config'

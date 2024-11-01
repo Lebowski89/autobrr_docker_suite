@@ -7,44 +7,44 @@ server:
 schedule: 0 */6 * * *
 clients:
   autobrr:
-    host: {{ autobrr_omegabrr_autobrr_host }}
+    host: {{ autobrr_clients_autobrr_host }}
     apikey: AUTOBRR_API
 
   arr:
-{% if autobrr_omegabrr_clients_lidarr_is_enabled %}
-    - name: {{ autobrr_omegabrr_lidarr_name }}
-      type: {{ autobrr_omegabrr_lidarr_type }}
-      host: {{ autobrr_omegabrr_lidarr_host }}
-      apikey: {{ autobrr_omegabrr_lidarr_api }}
+{% if autobrr_clients_lidarr_is_enabled %}
+    - name: {{ autobrr_clients_lidarr_name }}
+      type: {{ autobrr_clients_lidarr_type }}
+      host: {{ autobrr_clients_lidarr_host }}
+      apikey: {{ autobrr_clients_lidarr_api }}
       filters: []
 {% endif %}
-{% if autobrr_omegabrr_clients_radarr_is_enabled %}
-    - name: {{ autobrr_omegabrr_radarr_name }}
-      type: {{ autobrr_omegabrr_radarr_type }}
-      host: {{ autobrr_omegabrr_radarr_host }}
-      apikey: {{ autobrr_omegabrr_radarr_api }}
+{% if autobrr_clients_radarr_is_enabled %}
+    - name: {{ autobrr_clients_radarr_name }}
+      type: {{ autobrr_clients_radarr_type }}
+      host: {{ autobrr_clients_radarr_host }}
+      apikey: {{ autobrr_clients_radarr_api }}
       filters: []
 {% endif %}
-{% if autobrr_omegabrr_clients_radarr4k_is_enabled %}
-    - name: {{ autobrr_omegabrr_radarr4k_name }}
-      type: {{ autobrr_omegabrr_radarr4k_type }}
-      host: {{ autobrr_omegabrr_radarr4k_host }}
-      apikey: {{ autobrr_omegabrr_radarr4k_api }}
+{% if autobrr_clients_radarr4k_is_enabled %}
+    - name: {{ autobrr_clients_radarr4k_name }}
+      type: {{ autobrr_clients_radarr4k_type }}
+      host: {{ autobrr_clients_radarr4k_host }}
+      apikey: {{ autobrr_clients_radarr4k_api }}
       filters: []
 {% endif %}
-{% if autobrr_omegabrr_clients_sonarr_is_enabled %}
-    - name: {{ autobrr_omegabrr_sonarr_name }}
-      type: {{ autobrr_omegabrr_sonarr_type }}
-      host: {{ autobrr_omegabrr_sonarr_host }}
-      apikey: {{ autobrr_omegabrr_sonarr_api }}
+{% if autobrr_clients_sonarr_is_enabled %}
+    - name: {{ autobrr_clients_sonarr_name }}
+      type: {{ autobrr_clients_sonarr_type }}
+      host: {{ autobrr_clients_sonarr_host }}
+      apikey: {{ autobrr_clients_sonarr_api }}
       filters: []
       excludeAlternateTitles: false
 {% endif %}
-{% if autobrr_omegabrr_clients_whisparr_is_enabled %}
-    - name: {{ autobrr_omegabrr_whisparr_name }}
-      type: {{ autobrr_omegabrr_whisparr_type }}
-      host: {{ autobrr_omegabrr_whisparr_host }}
-      apikey: {{ autobrr_omegabrr_whisparr_api }}
+{% if autobrr_clients_whisparr_is_enabled %}
+    - name: {{ autobrr_clients_whisparr_name }}
+      type: {{ autobrr_clients_whisparr_type }}
+      host: {{ autobrr_clients_whisparr_host }}
+      apikey: {{ autobrr_clients_whisparr_api }}
       filters: []
 {% endif %}
 lists:

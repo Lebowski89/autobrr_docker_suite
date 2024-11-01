@@ -6,14 +6,14 @@
 
 - name: Register omegabrr container
   community.docker.docker_container_info:
-    name: '{{ lookup("vars", role_prefix + "_omegabrr_basics_name") }}'
+    name: '{{ lookup("vars", autobrr_prefix + "_omegabrr_basics_name") }}'
   register: autobrr_omegabrr_existing_container_result
 
 - name: Remove existing omegabrr container
   when: autobrr_omegabrr_existing_container_result.exists
   community.docker.docker_container:
     container_default_behavior: compatibility
-    name: '{{ lookup("vars", role_prefix + "_omegabrr_basics_name") }}'
+    name: '{{ lookup("vars", autobrr_prefix + "_omegabrr_basics_name") }}'
     state: absent
     stop_timeout: 10
   register: remove_autobrr_omegabrr_docker
@@ -29,8 +29,8 @@
   ansible.builtin.file:
     path: '{{ autobrr_omegabrr_paths_location }}'
     state: directory
-    owner: '{{ lookup("vars", role_prefix + "_omegabrr_env_puid") }}'
-    group: '{{ lookup("vars", role_prefix + "_omegabrr_env_pgid") }}'
+    owner: '{{ lookup("vars", autobrr_prefix + "_omegabrr_env_puid") }}'
+    group: '{{ lookup("vars", autobrr_prefix + "_omegabrr_env_pgid") }}'
     mode: '0755'
 
 ################################
@@ -39,7 +39,7 @@
 
 - name: Check if omegabrr config yaml exists
   ansible.builtin.stat:
-    path: '{{ lookup("vars", role_prefix + "_omegabrr_paths_location") }}/config.yaml'
+    path: '{{ lookup("vars", autobrr_prefix + "_omegabrr_paths_location") }}/config.yaml'
   register: autobrr_omegabrr_config_yaml
 
 - name: Generate API token
@@ -51,15 +51,15 @@
   when: not autobrr_omegabrr_config_yaml.stat.exists
   ansible.builtin.template:
     src: '{{ role_path }}/templates/omegabrr_config.yaml.j2'
-    dest: '{{ lookup("vars", role_prefix + "_omegabrr_paths_location") }}/config.yaml'
+    dest: '{{ lookup("vars", autobrr_prefix + "_omegabrr_paths_location") }}/config.yaml'
     force: true
-    owner: '{{ lookup("vars", role_prefix + "_omegabrr_env_puid") }}'
-    group: '{{ lookup("vars", role_prefix + "_omegabrr_env_pgid") }}'
+    owner: '{{ lookup("vars", autobrr_prefix + "_omegabrr_env_puid") }}'
+    group: '{{ lookup("vars", autobrr_prefix + "_omegabrr_env_pgid") }}'
     mode: '0664'
 
 - name: Wait for 'config.yaml' to be created
   ansible.builtin.wait_for:
-    path: '{{ lookup("vars", role_prefix + "_omegabrr_paths_location") }}/config.yaml'
+    path: '{{ lookup("vars", autobrr_prefix + "_omegabrr_paths_location") }}/config.yaml'
     state: present
 
 ################################
@@ -68,15 +68,15 @@
 
 - name: Create omegabrr container
   community.docker.docker_container:
-    name: '{{ lookup("vars", role_prefix + "_omegabrr_basics_name") }}'
-    image: '{{ lookup("vars", role_prefix + "_omegabrr_basics_image_repo") }}:{{ lookup("vars", role_prefix + "_omegabrr_basics_image_tag") }}'
+    name: '{{ lookup("vars", autobrr_prefix + "_omegabrr_basics_name") }}'
+    image: '{{ lookup("vars", autobrr_prefix + "_omegabrr_basics_image_repo") }}:{{ lookup("vars", autobrr_prefix + "_omegabrr_basics_image_tag") }}'
     networks: 
-      - name: '{{ lookup("vars", role_prefix + "_network_backend") }}'
+      - name: '{{ lookup("vars", autobrr_prefix + "_network_backend") }}'
     env:
-      PUID: '{{ lookup("vars", role_prefix + "_omegabrr_env_puid") }}'
-      PGID: '{{ lookup("vars", role_prefix + "_omegabrr_env_pgid") }}'
-      TZ: '{{ lookup("vars", role_prefix + "_omegabrr_env_timezone") }}'
+      PUID: '{{ lookup("vars", autobrr_prefix + "_omegabrr_env_puid") }}'
+      PGID: '{{ lookup("vars", autobrr_prefix + "_omegabrr_env_pgid") }}'
+      TZ: '{{ lookup("vars", autobrr_prefix + "_omegabrr_env_timezone") }}'
     ports:
-      - '{{ lookup("vars", role_prefix + "_omegabrr_ports_host") }}:{{ lookup("vars", role_prefix + "_omegabrr_ports_cont") }}'
-    volumes: '{{ lookup("vars", role_prefix + "_omegabrr_binds_config_mapping") }}'
-    restart_policy: '{{ lookup("vars", role_prefix + "_omegabrr_basics_restart_policy") }}'
+      - '{{ lookup("vars", autobrr_prefix + "_omegabrr_ports_host") }}:{{ lookup("vars", autobrr_prefix + "_omegabrr_ports_cont") }}'
+    volumes: '{{ lookup("vars", autobrr_prefix + "_omegabrr_binds_config_mapping") }}'
+    restart_policy: '{{ lookup("vars", autobrr_prefix + "_omegabrr_basics_restart_policy") }}'

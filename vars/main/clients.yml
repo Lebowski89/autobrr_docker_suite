@@ -1,21 +1,21 @@
 ---
 
-autobrr_omegabrr_clients_lidarr_is_enabled: '{{ (autobrr_omegabrr_lidarr_api is defined) and
-                                                (autobrr_omegabrr_lidarr_api is not none) and
-                                                (autobrr_omegabrr_lidarr_api | trim | length > 0) }}'
+autobrr_clients_lidarr_is_enabled: '{{ (autobrr_clients_lidarr_api is defined) and
+                                       (autobrr_clients_lidarr_api is not none) and
+                                       (autobrr_clients_lidarr_api | trim | length > 0) }}'
 
-autobrr_omegabrr_clients_radarr_is_enabled: '{{ (autobrr_omegabrr_radarr_api is defined) and
-                                                (autobrr_omegabrr_radarr_api is not none) and
-                                                (autobrr_omegabrr_radarr_api | trim | length > 0) }}'
+autobrr_clients_radarr_is_enabled: '{{ (autobrr_clients_radarr_api is defined) and
+                                       (autobrr_clients_radarr_api is not none) and
+                                       (autobrr_clients_radarr_api | trim | length > 0) }}'
 
-autobrr_omegabrr_clients_radarr4k_is_enabled: '{{ (autobrr_omegabrr_radarr4k_api is defined) and
-                                                  (autobrr_omegabrr_radarr4k_api is not none) and
-                                                  (autobrr_omegabrr_radarr4k_api | trim | length > 0) }}'
+autobrr_clients_radarr4k_is_enabled: '{{ (autobrr_clients_radarr4k_api is defined) and
+                                         (autobrr_clients_radarr4k_api is not none) and
+                                         (autobrr_clients_radarr4k_api | trim | length > 0) }}'
 
-autobrr_omegabrr_clients_sonarr_is_enabled: '{{ (autobrr_omegabrr_sonarr_api is defined) and
-                                                (autobrr_omegabrr_sonarr_api is not none) and
-                                                (autobrr_omegabrr_sonarr_api | trim | length > 0) }}'
+autobrr_clients_sonarr_is_enabled: '{{ (autobrr_clients_sonarr_api is defined) and
+                                       (autobrr_clients_sonarr_api is not none) and
+                                       (autobrr_clients_sonarr_api | trim | length > 0) }}'
 
-autobrr_omegabrr_clients_whisparr_is_enabled: '{{ (autobrr_omegabrr_whisparr_api is defined) and
-                                                  (autobrr_omegabrr_whisparr_api is not none) and
-                                                  (autobrr_omegabrr_whisparr_api | trim | length > 0) }}'
+autobrr_clients_whisparr_is_enabled: '{{ (autobrr_clients_whisparr_api is defined) and
+                                         (autobrr_clients_whisparr_api is not none) and
+                                         (autobrr_clients_whisparr_api | trim | length > 0) }}'

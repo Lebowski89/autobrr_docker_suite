@@ -23,8 +23,8 @@
   ansible.builtin.file:
     path: /etc/apt/keyrings/
     state: directory
-    owner: '{{ lookup("vars", role_prefix + "_env_puid") }}'
-    group: '{{ lookup("vars", role_prefix + "_env_pgid") }}'
+    owner: '{{ lookup("vars", autobrr_prefix + "_env_puid") }}'
+    group: '{{ lookup("vars", autobrr_prefix + "_env_pgid") }}'
     mode: '0755'
 
 - name: Curl docker gpg key
@@ -38,8 +38,8 @@
   ansible.builtin.file:
     path: /etc/apt/keyrings/docker.asc
     state: file
-    owner: '{{ lookup("vars", role_prefix + "_env_puid") }}'
-    group: '{{ lookup("vars", role_prefix + "_env_pgid") }}'
+    owner: '{{ lookup("vars", autobrr_prefix + "_env_puid") }}'
+    group: '{{ lookup("vars", autobrr_prefix + "_env_pgid") }}'
     mode: '0644'
 
 - name: Add repository to apt sources
