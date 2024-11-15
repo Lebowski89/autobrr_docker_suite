@@ -21,4 +21,4 @@ designed to be a one-stop OS overhaul. Those needing maximum ease, compatibility
 Notes: 
 (i) Setting up indexers/irc/filters and other config options in autobrr is done within the webui post-install
 (ii) Inputting autobrr's api into omegabrr and omegabrr's api into autobrr is done post-install
-(iii) You will need to input the filter id for each client as you make autobrr omegabrr filters for each client.
+(iii) You will need to input the filter id for each omegabrr client post-install.
