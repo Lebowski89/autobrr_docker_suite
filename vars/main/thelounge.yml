@@ -4,88 +4,88 @@
 # NETWORK
 ################################
 
-autobrr_thelounge_network_default_bind:
+thelounge_network_default_bind:
   - name: '{{ autobrr_network_backend }}'
-autobrr_thelounge_network_traefik_bind:
-  - name: '{{ autobrr_traefik_network }}'
+thelounge_network_traefik_bind:
+  - name: '{{ traefik_network }}'
 
-autobrr_thelounge_networks: '{{ autobrr_thelounge_network_default_bind
-                                + (autobrr_thelounge_network_traefik_bind
-                                   if autobrr_toggles_enable_traefik
-                                   else []) }}'
+thelounge_networks: '{{ thelounge_network_default_bind
+                        + (thelounge_network_traefik_bind
+                           if autobrr_toggles_enable_traefik
+                           else []) }}'
 
 ################################
 # LABELS
 ################################
 
-autobrr_thelounge_labels: '{{ autobrr_thelounge_traefik_labels_default
-                              | combine(autobrr_thelounge_traefik_labels_router)
-                              | combine(autobrr_thelounge_traefik_labels_router_secure) }}'
+thelounge_labels: '{{ thelounge_traefik_labels_default
+                      | combine(thelounge_traefik_labels_router)
+                      | combine(thelounge_traefik_labels_router_secure) }}'
 
 ################################
 # TRAEFIK
 ################################
 
-autobrr_thelounge_traefik_labels_default:
+thelounge_traefik_labels_default:
   traefik.enable: 'true'
-  traefik.docker.network: '{{ autobrr_traefik_network }}'
+  traefik.docker.network: '{{ traefik_network }}'
 
-autobrr_thelounge_traefik_labels_router:
+thelounge_traefik_labels_router:
   ## http
   traefik.http.routers.thelounge-rtr.entrypoints: 'http'
-  traefik.http.routers.thelounge-rtr.rule: '{{ autobrr_thelounge_traefik_http_rule }}'
-  traefik.http.routers.thelounge-rtr.middlewares: '{{ autobrr_thelounge_traefik_http_middlewares_bind }}'
-  traefik.http.routers.thelounge-rtr.priority: '{{ autobrr_thelounge_traefik_http_priority }}'
+  traefik.http.routers.thelounge-rtr.rule: '{{ thelounge_traefik_http_rule }}'
+  traefik.http.routers.thelounge-rtr.middlewares: '{{ thelounge_traefik_http_middlewares_bind }}'
+  traefik.http.routers.thelounge-rtr.priority: '{{ thelounge_traefik_http_priority }}'
   traefik.http.routers.thelounge-rtr.service: 'thelounge-rtr-svc'
-  traefik.http.services.thelounge-rtr-svc.loadbalancer.server.port: '{{ autobrr_thelounge_traefik_port }}'
+  traefik.http.services.thelounge-rtr-svc.loadbalancer.server.port: '{{ thelounge_traefik_port }}'
   ## http-api
   traefik.http.routers.thelounge-api-rtr.entrypoints: 'http'
-  traefik.http.routers.thelounge-api-rtr.rule: '{{ autobrr_thelounge_traefik_http_api_rule }}'
-  traefik.http.routers.thelounge-api-rtr.middlewares: '{{ autobrr_thelounge_traefik_http_api_middlewares_bind }}'
-  traefik.http.routers.thelounge-api-rtr.priority: '{{ autobrr_thelounge_traefik_http_api_priority }}'
+  traefik.http.routers.thelounge-api-rtr.rule: '{{ thelounge_traefik_http_api_rule }}'
+  traefik.http.routers.thelounge-api-rtr.middlewares: '{{ thelounge_traefik_http_api_middlewares_bind }}'
+  traefik.http.routers.thelounge-api-rtr.priority: '{{ thelounge_traefik_http_api_priority }}'
   traefik.http.routers.thelounge-api-rtr.service: 'thelounge-rtr-svc'
 
-autobrr_thelounge_traefik_labels_router_secure:
+thelounge_traefik_labels_router_secure:
   ## https
   traefik.http.routers.thelounge-rtr-secure.entrypoints: 'https'
-  traefik.http.routers.thelounge-rtr-secure.rule: '{{ autobrr_thelounge_traefik_https_rule }}'
-  traefik.http.routers.thelounge-rtr-secure.middlewares: '{{ autobrr_thelounge_traefik_https_middlewares_bind }}'
-  traefik.http.routers.thelounge-rtr-secure.priority: '{{ autobrr_thelounge_traefik_https_priority }}'
+  traefik.http.routers.thelounge-rtr-secure.rule: '{{ thelounge_traefik_https_rule }}'
+  traefik.http.routers.thelounge-rtr-secure.middlewares: '{{ thelounge_traefik_https_middlewares_bind }}'
+  traefik.http.routers.thelounge-rtr-secure.priority: '{{ thelounge_traefik_https_priority }}'
   traefik.http.routers.thelounge-rtr-secure.service: 'thelounge-rtr-secure-svc'
-  traefik.http.routers.thelounge-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
-  traefik.http.routers.thelounge-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
-  traefik.http.services.thelounge-rtr-secure-svc.loadbalancer.server.port: '{{ autobrr_thelounge_traefik_port }}'
+  traefik.http.routers.thelounge-rtr-secure.tls.certresolver: '{{ traefik_tls_certresolver }}'
+  traefik.http.routers.thelounge-rtr-secure.tls.options: '{{ traefik_tls_options }}'
+  traefik.http.services.thelounge-rtr-secure-svc.loadbalancer.server.port: '{{ thelounge_traefik_port }}'
   ## https-api
   traefik.http.routers.thelounge-api-rtr-secure.entrypoints: 'https'
-  traefik.http.routers.thelounge-api-rtr-secure.rule: '{{ autobrr_thelounge_traefik_https_api_rule }}'
-  traefik.http.routers.thelounge-api-rtr-secure.middlewares: '{{ autobrr_thelounge_traefik_https_api_middlewares_bind }}'
-  traefik.http.routers.thelounge-api-rtr-secure.priority: '{{ autobrr_thelounge_traefik_https_api_priority }}'
+  traefik.http.routers.thelounge-api-rtr-secure.rule: '{{ thelounge_traefik_https_api_rule }}'
+  traefik.http.routers.thelounge-api-rtr-secure.middlewares: '{{ thelounge_traefik_https_api_middlewares_bind }}'
+  traefik.http.routers.thelounge-api-rtr-secure.priority: '{{ thelounge_traefik_https_api_priority }}'
   traefik.http.routers.thelounge-api-rtr-secure.service: 'thelounge-rtr-secure-svc'
-  traefik.http.routers.thelounge-api-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
-  traefik.http.routers.thelounge-api-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
+  traefik.http.routers.thelounge-api-rtr-secure.tls.certresolver: '{{ traefik_tls_certresolver }}'
+  traefik.http.routers.thelounge-api-rtr-secure.tls.options: '{{ traefik_tls_options }}'
 
-autobrr_thelounge_traefik_http_middlewares_bind: '{{ autobrr_thelounge_traefik_http_middlewares
-                                                     + (",cloudflarewarp@docker"
-                                                        if (autobrr_toggles_enable_cloudflarewarp)
-                                                        else "")
-                                                     + (",authelia@docker"
-                                                        if (autobrr_toggles_enable_authelia_middleware)
-                                                        else "") }}'
+thelounge_traefik_http_middlewares_bind: '{{ thelounge_traefik_http_middlewares
+                                             + (",cloudflarewarp@docker"
+                                                if (autobrr_toggles_enable_cloudflarewarp)
+                                                else "")
+                                             + (",authelia@docker"
+                                                if (autobrr_toggles_enable_authelia_middleware)
+                                                else "") }}'
 
-autobrr_thelounge_traefik_http_api_middlewares_bind: '{{ autobrr_thelounge_traefik_http_api_middlewares
-                                                         + (",cloudflarewarp@docker"
-                                                            if (autobrr_toggles_enable_cloudflarewarp)
-                                                            else "") }}'
+thelounge_traefik_http_api_middlewares_bind: '{{ thelounge_traefik_http_api_middlewares
+                                                 + (",cloudflarewarp@docker"
+                                                    if (autobrr_toggles_enable_cloudflarewarp)
+                                                    else "") }}'
 
-autobrr_thelounge_traefik_https_middlewares_bind: '{{ autobrr_thelounge_traefik_https_middlewares
-                                                      + (",cloudflarewarp@docker"
-                                                         if (autobrr_toggles_enable_cloudflarewarp)
-                                                         else "")
-                                                      + (",authelia@docker"
-                                                         if (autobrr_toggles_enable_authelia_middleware)
-                                                         else "") }}'
+thelounge_traefik_https_middlewares_bind: '{{ thelounge_traefik_https_middlewares
+                                              + (",cloudflarewarp@docker"
+                                                 if (autobrr_toggles_enable_cloudflarewarp)
+                                                 else "")
+                                              + (",authelia@docker"
+                                                 if (autobrr_toggles_enable_authelia_middleware)
+                                                 else "") }}'
 
-autobrr_thelounge_traefik_https_api_middlewares_bind: '{{ autobrr_thelounge_traefik_https_api_middlewares
-                                                          + (",cloudflarewarp@docker"
-                                                             if (autobrr_toggles_enable_cloudflarewarp)
-                                                             else "") }}'
+thelounge_traefik_https_api_middlewares_bind: '{{ thelounge_traefik_https_api_middlewares
+                                                  + (",cloudflarewarp@docker"
+                                                     if (autobrr_toggles_enable_cloudflarewarp)
+                                                     else "") }}'

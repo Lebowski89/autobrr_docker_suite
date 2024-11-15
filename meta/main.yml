@@ -15,6 +15,7 @@ galaxy_info:
     - docker
     - postgres
     - thelounge
+    - znc
     - cloudflare
     - traefik
     - pvr

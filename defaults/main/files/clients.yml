@@ -7,40 +7,26 @@
 # CLIENTS (OMEGABRR)
 ################################
 
-  ## autobrr
-autobrr_clients_autobrr_host: 'http://{{ autobrr_basics_name }}:{{ autobrr_ports_cont }}'
-
   ## lidarr
-autobrr_clients_lidarr_type: 'lidarr'
-autobrr_clients_lidarr_name: 'lidarr'
-autobrr_clients_lidarr_port: '8686'
-autobrr_clients_lidarr_host: 'http://{{ autobrr_clients_lidarr_name }}:{{ autobrr_clients_lidarr_port }}'
-autobrr_clients_lidarr_api: ''
+omegabrr_clients_lidarr_host: 'http://lidarr:8989'
+omegabrr_clients_lidarr_api: ''
 
   ## radarr
-autobrr_clients_radarr_type: 'radarr'
-autobrr_clients_radarr_name: 'radarr'
-autobrr_clients_radarr_port: '7878'
-autobrr_clients_radarr_host: 'http://{{ autobrr_clients_radarr_name }}:{{ autobrr_clients_radarr_port }}'
-autobrr_clients_radarr_api: ''
+omegabrr_clients_radarr_host: 'http://radarr:7878'
+omegabrr_clients_radarr_api: ''
 
   ## radarr4k
-autobrr_clients_radarr4k_type: 'radarr'
-autobrr_clients_radarr4k_name: 'radarr4k'
-autobrr_clients_radarr4k_port: '7878'  ## container port will be same as radarr
-autobrr_clients_radarr4k_host: 'http://{{ autobrr_clients_radarr4k_name }}:{{ autobrr_clients_radarr4k_port }}'
-autobrr_clients_radarr4k_api: ''
+omegabrr_clients_radarr4k_host: 'http://radarr4k:7879:'
+omegabrr_clients_radarr4k_api: ''
 
   ## sonarr
-autobrr_clients_sonarr_type: 'sonarr'
-autobrr_clients_sonarr_name: 'sonarr'
-autobrr_clients_sonarr_port: '8989'
-autobrr_clients_sonarr_host: 'http://{{ autobrr_clients_sonarr_name }}:{{ autobrr_clients_sonarr_port }}'
-autobrr_clients_sonarr_api: ''
+omegabrr_clients_sonarr_host: 'http://sonarr:8989'
+omegabrr_clients_sonarr_api: ''
+
+  ## sonarr4k
+omegabrr_clients_sonarr4k_host: 'http://sonarr4k:8990'
+omegabrr_clients_sonarr4k_api: ''
 
   ## whisparr
-autobrr_clients_whisparr_type: 'whisparr'
-autobrr_clients_whisparr_name: 'whisparr'
-autobrr_clients_whisparr_port: '6969'
-autobrr_clients_whisparr_host: 'http://{{ autobrr_clients_whisparr_name }}:{{ autobrr_clients_whisparr_port }}'
-autobrr_clients_whisparr_api: ''
+omegabrr_clients_whisparr_host: 'http://whisparr:6969'
+omegabrr_clients_whisparr_api: ''

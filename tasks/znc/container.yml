@@ -6,18 +6,18 @@
 
 - name: Create znc appdata directory
   ansible.builtin.file:
-    path: '{{ lookup("vars", autobrr_prefix + "_znc_paths_location") }}'
+    path: '{{ znc_paths_location }}'
     state: directory
-    owner: '{{ lookup("vars", autobrr_prefix + "_znc_env_puid") }}'
-    group: '{{ lookup("vars", autobrr_prefix + "_znc_env_pgid") }}'
+    owner: '{{ znc_env_puid }}'
+    group: '{{ znc_env_pgid }}'
     mode: '0755'
 
 - name: Create znc config directory
   ansible.builtin.file:
-    path: '{{ lookup("vars", autobrr_prefix + "_znc_paths_location") }}/config'
+    path: '{{ znc_paths_location }}/config'
     state: directory
-    owner: '{{ lookup("vars", autobrr_prefix + "_znc_env_puid") }}'
-    group: '{{ lookup("vars", autobrr_prefix + "_znc_env_pgid") }}'
+    owner: '{{ znc_env_puid }}'
+    group: '{{ znc_env_pgid }}'
     mode: '0755'
 
 ################################
@@ -25,34 +25,34 @@
 ################################
 
 - name: Create ZNC container
-  when: not (lookup("vars", autobrr_prefix + "_toggles_enable_traefik"))
+  when: not toggles_enable_traefik
   community.docker.docker_container:
-    name: '{{ lookup("vars", autobrr_prefix + "_znc_basics_name") }}'
-    image: '{{ lookup("vars", autobrr_prefix + "_znc_basics_image_repo") }}:{{ lookup("vars", autobrr_prefix + "_znc_basics_image_tag") }}'
-    networks: '{{ lookup("vars", autobrr_prefix + "_znc_networks") }}'
+    name: '{{ znc_basics_name }}'
+    image: '{{ znc_basics_image_repo }}:{{ znc_basics_image_tag }}'
+    networks: '{{ znc_networks }}'
     env:
-      PUID: '{{ lookup("vars", autobrr_prefix + "_znc_env_puid") }}'
-      PGID: '{{ lookup("vars", autobrr_prefix + "_znc_env_pgid") }}'
-      TZ: '{{ lookup("vars", autobrr_prefix + "_znc_env_timezone") }}'
+      PUID: '{{ znc_env_puid }}'
+      PGID: '{{ znc_env_pgid }}'
+      TZ: '{{ timezone }}'
     ports:
-      - '{{ lookup("vars", autobrr_prefix + "_znc_ports_web_host") }}:{{ lookup("vars", autobrr_prefix + "_znc_ports_web_cont") }}'
-      - '{{ lookup("vars", autobrr_prefix + "_znc_ports_irc_host") }}:{{ lookup("vars", autobrr_prefix + "_znc_ports_irc_cont") }}'
-    volumes: '{{ lookup("vars", autobrr_prefix + "_znc_binds_config_mapping") }}'
-    restart_policy: '{{ lookup("vars", autobrr_prefix + "_znc_basics_restart_policy") }}'
+      - '{{ znc_ports_web_host }}:{{ znc_ports_web_cont }}'
+      - '{{ znc_ports_irc_host }}:{{ znc_ports_irc_cont }}'
+    volumes: '{{ znc_binds_config_mapping }}'
+    restart_policy: '{{ znc_basics_restart_policy }}'
 
 - name: Create ZNC traefik container
-  when: (lookup("vars", autobrr_prefix + "_toggles_enable_traefik"))
+  when: toggles_enable_traefik
   community.docker.docker_container:
-    name: '{{ lookup("vars", autobrr_prefix + "_znc_basics_name") }}'
-    image: '{{ lookup("vars", autobrr_prefix + "_znc_basics_image_repo") }}:{{ lookup("vars", autobrr_prefix + "_znc_basics_image_tag") }}'
-    networks: '{{ lookup("vars", autobrr_prefix + "_znc_networks") }}'
+    name: '{{ znc_basics_name }}'
+    image: '{{ znc_basics_image_repo }}:{{ znc_basics_image_tag }}'
+    networks: '{{ znc_networks }}'
     env:
-      PUID: '{{ lookup("vars", autobrr_prefix + "_znc_env_puid") }}'
-      PGID: '{{ lookup("vars", autobrr_prefix + "_znc_env_pgid") }}'
-      TZ: '{{ lookup("vars", autobrr_prefix + "_znc_env_timezone") }}'
-    labels: '{{ lookup("vars", autobrr_prefix + "_znc_labels") }}'
+      PUID: '{{ znc_env_puid }}'
+      PGID: '{{ znc_env_pgid }}'
+      TZ: '{{ timezone }}'
+    labels: '{{ znc_labels }}'
     ports:
-      - '{{ lookup("vars", autobrr_prefix + "_znc_ports_web_host") }}:{{ lookup("vars", autobrr_prefix + "_znc_ports_web_cont") }}'
-      - '{{ lookup("vars", autobrr_prefix + "_znc_ports_irc_host") }}:{{ lookup("vars", autobrr_prefix + "_znc_ports_irc_cont") }}'     
-    volumes: '{{ lookup("vars", autobrr_prefix + "_znc_binds_config_mapping") }}'
-    restart_policy: '{{ lookup("vars", autobrr_prefix + "_znc_basics_restart_policy") }}'
+      - '{{ znc_ports_web_host }}:{{ znc_ports_web_cont }}'
+      - '{{ znc_ports_irc_host }}:{{ znc_ports_irc_cont }}'     
+    volumes: '{{ znc_binds_config_mapping }}'
+    restart_policy: '{{ znc_basics_restart_policy }}'

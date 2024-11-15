@@ -4,60 +4,59 @@
 # BASICS
 ################################
 
-autobrr_postgres_basics_host: ''  # machine address for ansible postgres module to ping database
-autobrr_postgres_basics_name: 'postgres'
-autobrr_postgres_basics_image_repo: 'postgres'
-autobrr_postgres_basics_image_tag: '14'
-autobrr_postgres_basics_restart_policy: 'unless-stopped'
+postgres_basics_host: ''  # machine address for ansible postgres module to ping database
+postgres_basics_name: 'postgres'
+postgres_basics_image_repo: 'postgres'
+postgres_basics_image_tag: '14'
+postgres_basics_restart_policy: 'unless-stopped'
 
 ################################
 # NETWORK
 ################################
 
-autobrr_postgres_network: 'postgres'
-autobrr_postgres_network_driver: 'bridge'  ## only required if network doesn't exist
-autobrr_postgres_network_subnet: ''  ## only required if network doesn't exist
+postgres_network: 'postgres'
+postgres_network_driver: 'bridge'  ## only required if network doesn't exist
+postgres_network_subnet: ''  ## only required if network doesn't exist
 
 ################################
 # ENV
 ################################
 
-autobrr_postgres_env_timezone: 'Etc/UTC'
-autobrr_postgres_env_puid: '1000'
-autobrr_postgres_env_pgid: '1000'
+postgres_env_puid: '1000'
+postgres_env_pgid: '1000'
 
 ################################
 # PORTS
 ################################
 
-autobrr_postgres_ports_host: '5432'
-autobrr_postgres_ports_cont: '5432'
+postgres_ports_host: '5432'
+postgres_ports_cont: '5432'
 
 ################################
 # PATHS
 ################################
 
-autobrr_postgres_paths_folder: '{{ autobrr_postgres_basics_name }}'  # name of postgres folder
-autobrr_postgres_paths_location: '/opt/{{ autobrr_postgres_paths_folder }}' # path of postgres folder
-autobrr_postgres_paths_keys_location: '{{ autobrr_postgres_paths_location }}/keys'
+postgres_paths_folder: '{{ postgres_basics_name }}'  # name of postgres folder
+postgres_paths_location: '/opt/{{ postgres_paths_folder }}' # path of postgres folder
+postgres_paths_keys_location: '{{ postgres_paths_location }}/keys'
 
 ################################
 # BINDS
 ################################
 
 autobrr_postgres_binds_config_mapping:
-  - '{{ autobrr_postgres_paths_location }}:/var/lib/postgresql/data'
+  - '{{ postgres_paths_location }}:/var/lib/postgresql/data'
 
 autobrr_postgres_binds_keys_mapping:
-  - '{{ autobrr_postgres_paths_keys_location }}:/keys'
+  - '{{ postgres_paths_keys_location }}:/keys'
 
 ################################
 # AUTH
 ################################
 
-autobrr_postgres_auth_user: ''
-autobrr_postgres_auth_password: ''
-autobrr_postgres_auth_password_file: 'postgres_key.txt'  ## will be created by role 
+postgres_auth_user: ''
+postgres_auth_password: ''
+postgres_auth_password_file: 'postgres_key.txt'  ## will be created by role 
 
 ################################
 # DATABASE

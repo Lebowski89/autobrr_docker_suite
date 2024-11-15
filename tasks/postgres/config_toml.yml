@@ -2,54 +2,54 @@
 
 - name: Ensure databaseType is set
   ansible.builtin.lineinfile:
-    path: '{{ lookup("vars", autobrr_prefix + "_paths_location") }}/config.toml'
+    path: '{{ autobrr_paths_location }}/config.toml'
     search_string: 'databaseType'
     line: 'databaseType = "postgres"'
 
 - name: Ensure postgresHost is set
   ansible.builtin.lineinfile:
-    path: '{{ lookup("vars", autobrr_prefix + "_paths_location") }}/config.toml'
+    path: '{{ autobrr_paths_location }}/config.toml'
     search_string: 'postgresHost'
-    line: 'postgresHost = "{{ lookup("vars", autobrr_prefix + "_postgres_basics_name") }}"'
+    line: 'postgresHost = "{{ postgres_basics_name }}"'
 
 - name: Ensure databasePort is set
   ansible.builtin.lineinfile:
-    path: '{{ lookup("vars", autobrr_prefix + "_paths_location") }}/config.toml'
+    path: '{{ autobrr_paths_location }}/config.toml'
     search_string: 'postgresPort'
-    line: 'postgresPort = "{{ lookup("vars", autobrr_prefix + "_postgres_ports_cont") }}"'
+    line: 'postgresPort = "{{ postgres_ports_cont }}"'
 
 - name: Ensure databaseDatabase is set
   ansible.builtin.lineinfile:
-    path: '{{ lookup("vars", autobrr_prefix + "_paths_location") }}/config.toml'
+    path: '{{ autobrr_paths_location }}/config.toml'
     search_string: 'postgresDatabase'
-    line: 'postgresDatabase = "{{ lookup("vars", autobrr_prefix + "_postgres_database") }}"'
+    line: 'postgresDatabase = "{{ autobrr_postgres_database }}"'
 
 - name: Ensure postgresUser is set
   ansible.builtin.lineinfile:
-    path: '{{ lookup("vars", autobrr_prefix + "_paths_location") }}/config.toml'
+    path: '{{ autobrr_paths_location }}/config.toml'
     search_string: 'postgresUser'
-    line: 'postgresUser = "{{ lookup("vars", autobrr_prefix + "_postgres_auth_user") }}"'
+    line: 'postgresUser = "{{ postgres_auth_user }}"'
 
 - name: Ensure postgresPass is set
   ansible.builtin.lineinfile:
-    path: '{{ lookup("vars", autobrr_prefix + "_paths_location") }}/config.toml'
+    path: '{{ autobrr_paths_location }}/config.toml'
     search_string: 'postgresPass'
-    line: 'postgresPass = "{{ lookup("vars", autobrr_prefix + "_postgres_auth_password") }}"'
+    line: 'postgresPass = "{{ postgres_auth_password }}"'
 
 - name: Ensure postgresSSLMode is set
   ansible.builtin.lineinfile:
-    path: '{{ lookup("vars", autobrr_prefix + "_paths_location") }}/config.toml'
+    path: '{{ autobrr_paths_location }}/config.toml'
     search_string: 'postgresSSLMode'
     line: 'postgresSSLMode = "disable"'
 
 - name: Ensure postgresExtraParams are set
   ansible.builtin.lineinfile:
-    path: '{{ lookup("vars", autobrr_prefix + "_paths_location") }}/config.toml'
+    path: '{{ autobrr_paths_location }}/config.toml'
     search_string: 'postgresExtraParams'
     line: 'postgresExtraParams = ""'
 
 - name: Remove sqlite database file
-  when: (lookup("vars", autobrr_prefix + "_toggles_clean_files"))
+  when: autobrr_toggles_clean_files
   ansible.builtin.file:
-    path: '{{ lookup("vars", autobrr_prefix + "_paths_location") }}/autobrr.db'
+    path: '{{ autobrr_paths_location }}/autobrr.db'
     state: absent

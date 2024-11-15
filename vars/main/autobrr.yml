@@ -7,9 +7,9 @@
 autobrr_network_default_bind:
   - name: '{{ autobrr_network_backend }}'
 autobrr_network_postgres_bind:
-  - name: '{{ autobrr_postgres_network }}'
+  - name: '{{ postgres_network }}'
 autobrr_network_traefik_bind:
-  - name: '{{ autobrr_traefik_network }}'
+  - name: '{{ traefik_network }}'
 
 autobrr_networks: '{{ autobrr_network_default_bind
                       + (autobrr_network_postgres_bind
@@ -20,11 +20,11 @@ autobrr_networks: '{{ autobrr_network_default_bind
                          else []) }}'
 
 autobrr_network_backend_is_enabled: '{{ (autobrr_network_backend_driver is defined) and
-                                         (autobrr_network_backend_driver is not none) and
-                                         (autobrr_network_backend_driver | trim | length > 0) and
-                                         (autobrr_network_backend_subnet is defined) and
-                                         (autobrr_network_backend_subnet is not none) and
-                                         (autobrr_network_backend_subnet | trim | length > 0) }}'
+                                        (autobrr_network_backend_driver is not none) and
+                                        (autobrr_network_backend_driver | trim | length > 0) and
+                                        (autobrr_network_backend_subnet is defined) and
+                                        (autobrr_network_backend_subnet is not none) and
+                                        (autobrr_network_backend_subnet | trim | length > 0) }}'
           
 ################################
 # LABELS
@@ -47,7 +47,7 @@ autobrr_volumes: '{{ autobrr_binds_config_mapping
 
 autobrr_traefik_labels_default:
   traefik.enable: 'true'
-  traefik.docker.network: '{{ autobrr_traefik_network }}'
+  traefik.docker.network: '{{ traefik_network }}'
 
 autobrr_traefik_labels_router:
   ## http
@@ -71,8 +71,8 @@ autobrr_traefik_labels_router_secure:
   traefik.http.routers.autobrr-rtr-secure.middlewares: '{{ autobrr_traefik_https_middlewares_bind }}'
   traefik.http.routers.autobrr-rtr-secure.priority: '{{ autobrr_traefik_https_priority }}'
   traefik.http.routers.autobrr-rtr-secure.service: 'autobrr-rtr-secure-svc'
-  traefik.http.routers.autobrr-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
-  traefik.http.routers.autobrr-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
+  traefik.http.routers.autobrr-rtr-secure.tls.certresolver: '{{ traefik_tls_certresolver }}'
+  traefik.http.routers.autobrr-rtr-secure.tls.options: '{{ traefik_tls_options }}'
   traefik.http.services.autobrr-rtr-secure-svc.loadbalancer.server.port: '{{ autobrr_traefik_port }}'
   ## https-api
   traefik.http.routers.autobrr-api-rtr-secure.entrypoints: 'https'
@@ -80,20 +80,20 @@ autobrr_traefik_labels_router_secure:
   traefik.http.routers.autobrr-api-rtr-secure.middlewares: '{{ autobrr_traefik_https_api_middlewares_bind }}'
   traefik.http.routers.autobrr-api-rtr-secure.priority: '{{ autobrr_traefik_https_api_priority }}'
   traefik.http.routers.autobrr-api-rtr-secure.service: 'autobrr-rtr-secure-svc'
-  traefik.http.routers.autobrr-api-rtr-secure.tls.certresolver: '{{ autobrr_traefik_tls_certresolver }}'
-  traefik.http.routers.autobrr-api-rtr-secure.tls.options: '{{ autobrr_traefik_tls_options }}'
+  traefik.http.routers.autobrr-api-rtr-secure.tls.certresolver: '{{ traefik_tls_certresolver }}'
+  traefik.http.routers.autobrr-api-rtr-secure.tls.options: '{{ traefik_tls_options }}'
 
 
 autobrr_traefik_is_enabled: '{{ (autobrr_traefik_domain is defined) and
                                 (autobrr_traefik_domain is not none) and
                                 (autobrr_traefik_domain | trim | length > 0) }}'
 
-autobrr_traefik_network_is_enabled: '{{ (autobrr_traefik_network_driver is defined) and
-                                        (autobrr_traefik_network_driver is not none) and
-                                        (autobrr_traefik_network_driver | trim | length > 0) and
-                                        (autobrr_traefik_network_subnet is defined) and
-                                        (autobrr_traefik_network_subnet is not none) and
-                                        (autobrr_traefik_network_subnet | trim | length > 0) }}'
+autobrr_traefik_network_is_enabled: '{{ (traefik_network_driver is defined) and
+                                        (traefik_network_driver is not none) and
+                                        (traefik_network_driver | trim | length > 0) and
+                                        (traefik_network_subnet is defined) and
+                                        (traefik_network_subnet is not none) and
+                                        (traefik_network_subnet | trim | length > 0) }}'
 
 autobrr_traefik_http_middlewares_bind: '{{ autobrr_traefik_http_middlewares
                                            + (",cloudflarewarp@docker"

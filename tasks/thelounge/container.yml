@@ -6,20 +6,20 @@
 
 - name: Register thelounge container
   community.docker.docker_container_info:
-    name: '{{ lookup("vars", autobrr_prefix + "_thelounge_basics_name") }}'
-  register: autobrr_thelounge_existing_container_result
+    name: '{{ thelounge_basics_name }}'
+  register: thelounge_existing_container_result
 
 - name: Remove existing thelounge container
-  when: autobrr_thelounge_existing_container_result.exists
+  when: thelounge_existing_container_result.exists
   community.docker.docker_container:
     container_default_behavior: compatibility
-    name: '{{ lookup("vars", autobrr_prefix + "_thelounge_basics_name") }}'
+    name: '{{ thelounge_basics_name }}'
     state: absent
     stop_timeout: 10
-  register: remove_autobrr_thelounge_docker
+  register: remove_thelounge_docker
   retries: 5
   delay: 10
-  until: remove_autobrr_thelounge_docker is succeeded
+  until: remove_thelounge_docker is succeeded
 
 ################################
 # APPDATA
@@ -27,18 +27,18 @@
 
 - name: Create thelounge appdata directory
   ansible.builtin.file:
-    path: '{{ lookup("vars", autobrr_prefix + "_thelounge_paths_location") }}'
+    path: '{{ thelounge_paths_location }}'
     state: directory
-    owner: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_puid") }}'
-    group: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_pgid") }}'
+    owner: '{{ thelounge_env_puid }}'
+    group: '{{ thelounge_env_pgid }}'
     mode: '0755'
 
 - name: Create thelounge config directory
   ansible.builtin.file:
-    path: '{{ lookup("vars", autobrr_prefix + "_thelounge_paths_location") }}/config'
+    path: '{{ thelounge_paths_location }}/config'
     state: directory
-    owner: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_puid") }}'
-    group: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_pgid") }}'
+    owner: '{{ thelounge_env_puid }}'
+    group: '{{ thelounge_env_pgid }}'
     mode: '0755'
 
 ################################
@@ -46,32 +46,32 @@
 ################################
 
 - name: Create thelounge container
-  when: not (lookup("vars", autobrr_prefix + "_toggles_enable_traefik"))
+  when: not toggles_enable_traefik
   community.docker.docker_container:
-    name: '{{ lookup("vars", autobrr_prefix + "_thelounge_basics_name") }}'
-    image: '{{ lookup("vars", autobrr_prefix + "_thelounge_basics_image_repo") }}:{{ lookup("vars", autobrr_prefix + "_thelounge_basics_image_tag") }}'
-    networks: '{{ lookup("vars", autobrr_prefix + "_thelounge_networks") }}'
+    name: '{{ thelounge_basics_name }}'
+    image: '{{ thelounge_basics_image_repo }}:{{ thelounge_basics_image_tag }}'
+    networks: '{{ thelounge_networks }}'
     env:
-      PUID: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_puid") }}'
-      PGID: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_pgid") }}'
-      TZ: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_timezone") }}'
+      PUID: '{{ thelounge_env_puid }}'
+      PGID: '{{ thelounge_env_pgid }}'
+      TZ: '{{ timezone }}'
     ports:
-      - '{{ lookup("vars", autobrr_prefix + "_thelounge_ports_host") }}:{{ lookup("vars", autobrr_prefix + "_thelounge_ports_cont") }}'
-    volumes: '{{ lookup("vars", autobrr_prefix + "_thelounge_binds_config_mapping") }}'
-    restart_policy: '{{ lookup("vars", autobrr_prefix + "_thelounge_basics_restart_policy") }}'
+      - '{{ thelounge_ports_host }}:{{ thelounge_ports_cont }}'
+    volumes: '{{ thelounge_binds_config_mapping }}'
+    restart_policy: '{{ thelounge_basics_restart_policy }}'
 
 - name: Create thelounge traefik container
-  when: (lookup("vars", autobrr_prefix + "_toggles_enable_traefik"))
+  when: toggles_enable_traefik
   community.docker.docker_container:
-    name: '{{ lookup("vars", autobrr_prefix + "_thelounge_basics_name") }}'
-    image: '{{ lookup("vars", autobrr_prefix + "_thelounge_basics_image_repo") }}:{{ lookup("vars", autobrr_prefix + "_thelounge_basics_image_tag") }}'
-    networks: '{{ lookup("vars", autobrr_prefix + "_thelounge_networks") }}'
+    name: '{{ thelounge_basics_name }}'
+    image: '{{ thelounge_basics_image_repo }}:{{ thelounge_basics_image_tag }}'
+    networks: '{{ thelounge_networks }}'
     env:
-      PUID: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_puid") }}'
-      PGID: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_pgid") }}'
-      TZ: '{{ lookup("vars", autobrr_prefix + "_thelounge_env_timezone") }}'
-    labels: '{{ lookup("vars", autobrr_prefix + "_thelounge_labels") }}'
+      PUID: '{{ thelounge_env_puid }}'
+      PGID: '{{ thelounge_env_pgid }}'
+      TZ: '{{ timezone }}'
+    labels: '{{ thelounge_labels }}'
     ports:
-      - '{{ lookup("vars", autobrr_prefix + "_thelounge_ports_host") }}:{{ lookup("vars", autobrr_prefix + "_thelounge_ports_cont") }}'
-    volumes: '{{ lookup("vars", autobrr_prefix + "_thelounge_binds_config_mapping") }}'
-    restart_policy: '{{ lookup("vars", autobrr_prefix + "_thelounge_basics_restart_policy") }}'
+      - '{{ thelounge_ports_host }}:{{ thelounge_ports_cont }}'
+    volumes: '{{ thelounge_binds_config_mapping }}'
+    restart_policy: '{{ thelounge_basics_restart_policy }}'

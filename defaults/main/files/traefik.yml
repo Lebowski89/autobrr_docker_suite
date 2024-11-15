@@ -10,30 +10,30 @@ autobrr_traefik_domain: ''
 autobrr_traefik_port: '{{ autobrr_ports_cont }}'
 
   ## thelounge
-autobrr_thelounge_traefik_subdomain: '{{ autobrr_thelounge_basics_name }}'
-autobrr_thelounge_traefik_domain: '{{ autobrr_traefik_domain }}'
-autobrr_thelounge_traefik_port: '{{ autobrr_thelounge_ports_cont }}'
+thelounge_traefik_subdomain: '{{ thelounge_basics_name }}'
+thelounge_traefik_domain: '{{ autobrr_traefik_domain }}'
+thelounge_traefik_port: '{{ thelounge_ports_cont }}'
 
   ## znc
-autobrr_znc_traefik_subdomain: '{{ autobrr_znc_basics_name }}'
-autobrr_znc_traefik_domain: '{{ autobrr_traefik_domain }}'
-autobrr_znc_traefik_web_port: '{{ autobrr_znc_ports_web_cont }}'
-autobrr_znc_traefik_irc_port: '{{ autobrr_znc_ports_irc_cont }}'
+znc_traefik_subdomain: '{{ znc_basics_name }}'
+znc_traefik_domain: '{{ autobrr_traefik_domain }}'
+znc_traefik_web_port: '{{ znc_ports_web_cont }}'
+znc_traefik_irc_port: '{{ znc_ports_irc_cont }}'
 
 ################################
 # NETWORK
 ################################
 
-autobrr_traefik_network: 'traefik_proxy'
-autobrr_traefik_network_driver: 'bridge'  ## only required if network doesn't exist
-autobrr_traefik_network_subnet: ''  ## only required if network doesn't exist
+traefik_network: 'traefik_proxy'
+traefik_network_driver: 'bridge'  ## only required if network doesn't exist
+traefik_network_subnet: ''  ## only required if network doesn't exist
 
 ################################
 # TLS
 ################################
 
-autobrr_traefik_tls_certresolver: 'dns-cloudflare'
-autobrr_traefik_tls_options: 'tls-opts@file'
+traefik_tls_certresolver: 'dns-cloudflare'
+traefik_tls_options: 'tls-opts@file'
 
 ################################
 # ROUTER (HTTP)
@@ -49,22 +49,22 @@ autobrr_traefik_http_api_rule: '{{ autobrr_traefik_http_rule + " && (PathPrefix(
 autobrr_traefik_http_api_priority: '30'
 
   ## thelounge
-autobrr_thelounge_traefik_http_middlewares: '{{ autobrr_traefik_http_middlewares }}'
-autobrr_thelounge_traefik_http_rule: 'Host(`{{ autobrr_thelounge_traefik_subdomain }}.{{ autobrr_thelounge_traefik_domain }}`)'
-autobrr_thelounge_traefik_http_priority: '{{ autobrr_traefik_http_priority }}'
+thelounge_traefik_http_middlewares: '{{ autobrr_traefik_http_middlewares }}'
+thelounge_traefik_http_rule: 'Host(`{{ thelounge_traefik_subdomain }}.{{ thelounge_traefik_domain }}`)'
+thelounge_traefik_http_priority: '{{ autobrr_traefik_http_priority }}'
 
-autobrr_thelounge_traefik_http_api_middlewares: '{{ autobrr_traefik_http_api_middlewares }}'
-autobrr_thelounge_traefik_http_api_rule: '{{ autobrr_thelounge_traefik_http_rule + " && (PathPrefix(`/uploads`))" }}'
-autobrr_thelounge_traefik_http_api_priority: '{{ autobrr_traefik_http_api_priority }}'
+thelounge_traefik_http_api_middlewares: '{{ autobrr_traefik_http_api_middlewares }}'
+thelounge_traefik_http_api_rule: '{{ thelounge_traefik_http_rule + " && (PathPrefix(`/uploads`))" }}'
+thelounge_traefik_http_api_priority: '{{ autobrr_traefik_http_api_priority }}'
 
   ## znc
-autobrr_znc_traefik_http_web_middlewares: '{{ autobrr_traefik_http_middlewares }}'
-autobrr_znc_traefik_http_web_rule: 'Host(`{{ autobrr_znc_traefik_subdomain }}.{{ autobrr_znc_traefik_domain }}`)'
-autobrr_znc_traefik_http_web_priority: '{{ autobrr_traefik_http_priority }}'
+znc_traefik_http_web_middlewares: '{{ autobrr_traefik_http_middlewares }}'
+znc_traefik_http_web_rule: 'Host(`{{ znc_traefik_subdomain }}.{{ znc_traefik_domain }}`)'
+znc_traefik_http_web_priority: '{{ autobrr_traefik_http_priority }}'
 
-autobrr_znc_traefik_http_web_api_middlewares: '{{ autobrr_traefik_http_api_middlewares }}'
-autobrr_znc_traefik_http_web_api_rule: '{{ autobrr_znc_traefik_http_web_rule + " && (PathPrefix(`/uploads`))" }}'
-autobrr_znc_traefik_http_web_api_priority: '{{ autobrr_traefik_http_api_priority }}'
+znc_traefik_http_web_api_middlewares: '{{ autobrr_traefik_http_api_middlewares }}'
+znc_traefik_http_web_api_rule: '{{ znc_traefik_http_web_rule + " && (PathPrefix(`/uploads`))" }}'
+znc_traefik_http_web_api_priority: '{{ autobrr_traefik_http_api_priority }}'
 
 ################################
 # ROUTER (HTTPS)
@@ -80,30 +80,30 @@ autobrr_traefik_https_api_rule: '{{ autobrr_traefik_https_rule + " && (PathPrefi
 autobrr_traefik_https_api_priority: '30'
 
   ## thelounge
-autobrr_thelounge_traefik_https_middlewares: '{{ autobrr_traefik_https_middlewares }}'
-autobrr_thelounge_traefik_https_rule: 'Host(`{{ autobrr_thelounge_traefik_subdomain }}.{{ autobrr_thelounge_traefik_domain }}`)'
-autobrr_thelounge_traefik_https_priority: '{{ autobrr_traefik_https_priority }}'
+thelounge_traefik_https_middlewares: '{{ autobrr_traefik_https_middlewares }}'
+thelounge_traefik_https_rule: 'Host(`{{ thelounge_traefik_subdomain }}.{{ thelounge_traefik_domain }}`)'
+thelounge_traefik_https_priority: '{{ autobrr_traefik_https_priority }}'
 
-autobrr_thelounge_traefik_https_api_middlewares: '{{ autobrr_traefik_https_api_middlewares }}'
-autobrr_thelounge_traefik_https_api_rule: '{{ autobrr_thelounge_traefik_https_rule + " && (PathPrefix(`/uploads`))" }}'
-autobrr_thelounge_traefik_https_api_priority: '{{ autobrr_traefik_https_api_priority }}'
+thelounge_traefik_https_api_middlewares: '{{ autobrr_traefik_https_api_middlewares }}'
+thelounge_traefik_https_api_rule: '{{ thelounge_traefik_https_rule + " && (PathPrefix(`/uploads`))" }}'
+thelounge_traefik_https_api_priority: '{{ autobrr_traefik_https_api_priority }}'
 
   ## znc
-autobrr_znc_traefik_https_web_middlewares: '{{ autobrr_traefik_https_middlewares }}'
-autobrr_znc_traefik_https_web_rule: 'Host(`{{ autobrr_znc_traefik_subdomain }}.{{ autobrr_znc_traefik_domain }}`)'
-autobrr_znc_traefik_https_web_priority: '{{ autobrr_traefik_https_priority }}'
+znc_traefik_https_web_middlewares: '{{ autobrr_traefik_https_middlewares }}'
+znc_traefik_https_web_rule: 'Host(`{{ znc_traefik_subdomain }}.{{ znc_traefik_domain }}`)'
+znc_traefik_https_web_priority: '{{ autobrr_traefik_https_priority }}'
 
-autobrr_znc_traefik_https_web_api_middlewares: '{{ autobrr_traefik_https_api_middlewares }}'
-autobrr_znc_traefik_https_web_api_rule: '{{ autobrr_znc_traefik_https_web_rule + " && (PathPrefix(`/uploads`))" }}'
-autobrr_znc_traefik_https_web_api_priority: '{{ autobrr_traefik_https_api_priority }}'
+znc_traefik_https_web_api_middlewares: '{{ autobrr_traefik_https_api_middlewares }}'
+znc_traefik_https_web_api_rule: '{{ znc_traefik_https_web_rule + " && (PathPrefix(`/uploads`))" }}'
+znc_traefik_https_web_api_priority: '{{ autobrr_traefik_https_api_priority }}'
 
 ################################
 # ROUTER (TCP)
 ################################
 
   ## znc-irc
-autobrr_znc_traefik_tcp_irc_rule: 'HostSNI(`{{ autobrr_znc_traefik_subdomain }}.{{ autobrr_znc_traefik_domain }}`)'
-autobrr_znc_traefik_tcp_irc_priority: '{{ autobrr_traefik_http_priority }}'
+znc_traefik_tcp_irc_rule: 'HostSNI(`{{ znc_traefik_subdomain }}.{{ znc_traefik_domain }}`)'
+znc_traefik_tcp_irc_priority: '{{ autobrr_traefik_http_priority }}'
 
 ################################
 # THEME-PARK
