@@ -88,12 +88,12 @@ autobrr_traefik_is_enabled: '{{ (autobrr_traefik_domain is defined) and
                                 (autobrr_traefik_domain is not none) and
                                 (autobrr_traefik_domain | trim | length > 0) }}'
 
-autobrr_traefik_network_is_enabled: '{{ (traefik_network_driver is defined) and
-                                        (traefik_network_driver is not none) and
-                                        (traefik_network_driver | trim | length > 0) and
-                                        (traefik_network_subnet is defined) and
-                                        (traefik_network_subnet is not none) and
-                                        (traefik_network_subnet | trim | length > 0) }}'
+traefik_network_is_enabled: '{{ (traefik_network_driver is defined) and
+                                (traefik_network_driver is not none) and
+                                (traefik_network_driver | trim | length > 0) and
+                                (traefik_network_subnet is defined) and
+                                (traefik_network_subnet is not none) and
+                                (traefik_network_subnet | trim | length > 0) }}'
 
 autobrr_traefik_http_middlewares_bind: '{{ autobrr_traefik_http_middlewares
                                            + (",cloudflarewarp@docker"

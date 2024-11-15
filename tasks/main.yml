@@ -174,23 +174,23 @@
 
     - name: Register traefik network
       community.docker.docker_network_info:
-        name: '{{ autobrr_traefik_network }}'
-      register: autobrr_traefik_network_result
+        name: '{{ traefik_network }}'
+      register: traefik_network_result
 
     - name: Traefik builtin fail
       when:
-        - not autobrr_traefik_network_is_enabled
-        - not autobrr_traefik_network_result.exists
+        - not traefik_network_is_enabled
+        - not traefik_network_result.exists
       ansible.builtin.fail:
         msg: Traefik network does not exist nor is it enabled. Ensure the Traefik network variables contain valid entries.
 
     - name: Create traefik network
-      when: not autobrr_traefik_network_result.exists
+      when: not traefik_network_result.exists
       community.docker.docker_network:
-        name: '{{ autobrr_traefik_network }}'
-        driver: '{{ autobrr_traefik_network_driver }}'
+        name: '{{ traefik_network }}'
+        driver: '{{ traefik_network_driver }}'
         ipam_config:
-          - subnet: '{{ autobrr_traefik_network_subnet }}'
+          - subnet: '{{ traefik_network_subnet }}'
 
 ################################
 # CLOUDFLARE
