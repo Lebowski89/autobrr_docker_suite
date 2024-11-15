@@ -8,13 +8,15 @@ autobrr Suite
       - Includes the option of creating a cloudflare DNS record for your autobrr instance for reverse proxy purposes.
       - Includes the option of joining Lidarr to an existing Traefik docker network (or creating one if none exists).
 
+Docker containers included: autobrr, omegabrr, thelounge, znc, postgres
+
 What this role is: First and foremost, this role has been crafted and designed to serve the needs of.. me.
 However, when and where possible - the role has included toggles, conditionals, and tasks to improve compatiblity and usability.
-This role is intended for someone who has Ansible installed and wants to deploy these apps locally or onto a remote system.
+This role is intended for someone who has ansible installed and wants to deploy these apps locally or onto a remote system.
 
 Defining 'Standalone': This role is designed to deploy the above apps and their companions and nothing more. It includes all
 required defaults/variables within the role, and is designed to get these apps up and running within a single role. It is not
-designed to be a one-stop OS overhaul, those needing maximum ease, compatibility, and a large support base should try Saltbox.
+designed to be a one-stop OS overhaul. Those needing maximum ease, compatibility, and a large support base should try Saltbox.
 
 Notes: 
 (i) Setting up indexers/irc/filters and other config options in autobrr is done within the webui post-install
